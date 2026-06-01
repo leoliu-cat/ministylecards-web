@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../config';
 import React, { useState } from 'react';
 import { Search, Instagram, Facebook, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -10,7 +11,7 @@ export function JournalPage() {
   const [apiArticles, setApiArticles] = useState<any[]>([]);
 
   React.useEffect(() => {
-    fetch('/api/posts')
+    fetch(`${API_BASE_URL}/api/posts`)
       .then(res => res.json())
       .then(async data => {
         if (Array.isArray(data)) {
@@ -18,7 +19,7 @@ export function JournalPage() {
           const fullPosts = await Promise.all(
             data.map(async (post) => {
               try {
-                const detailRes = await fetch(`/api/posts/${post.slug}`);
+                const detailRes = await fetch(`${API_BASE_URL}/api/posts/${post.slug}`);
                 if (detailRes.ok) {
                   return await detailRes.json();
                 }

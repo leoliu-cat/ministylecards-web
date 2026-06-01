@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../config';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -6,7 +7,7 @@ export function CollectionsPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/collections')
+    fetch(`${API_BASE_URL}/api/collections`)
       .then(res => res.json())
       .then(data => {
         setCollections(data);

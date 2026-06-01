@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../config';
 import React from 'react';
 import { Heart, ChevronRight, ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -25,7 +26,7 @@ export function CategoryLayout({ title, subtitle, breadcrumbs, products, hideCol
   const { toggleFavorite, isFavorited } = useFavorites();
 
   React.useEffect(() => {
-    fetch('/api/collections')
+    fetch(`${API_BASE_URL}/api/collections`)
       .then(res => res.json())
       .then(data => {
         setCollections(Array.isArray(data) ? data.slice(0, 5) : data);

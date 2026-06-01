@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../config';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { SEO } from '../components/SEO';
@@ -11,8 +12,8 @@ export function EssentialDesignPage() {
 
   useEffect(() => {
     Promise.all([
-      fetch('/api/collections').then(r => r.json()),
-      fetch('/api/products').then(r => r.json())
+      fetch(`${API_BASE_URL}/api/collections`).then(r => r.json()),
+      fetch(`${API_BASE_URL}/api/products`).then(r => r.json())
     ])
     .then(([collectionsData, productsData]) => {
       const essentialProducts = Array.isArray(productsData)

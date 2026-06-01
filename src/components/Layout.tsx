@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../config';
 import React, { useState, useEffect } from 'react';
 import { Link, Outlet } from 'react-router-dom';
 import { Search, Heart, ShoppingCart, Menu, User, X, Instagram, Facebook } from 'lucide-react';
@@ -25,7 +26,7 @@ export function Layout() {
   const cartCount = cartItems.length;
 
   useEffect(() => {
-    fetch('/api/categories')
+    fetch(`${API_BASE_URL}/api/categories`)
       .then(r => r.json())
       .then(data => {
         setCategories(data);
@@ -43,7 +44,7 @@ export function Layout() {
     }
     const timer = setTimeout(() => {
       setIsSearching(true);
-      fetch('/api/products')
+      fetch(`${API_BASE_URL}/api/products`)
         .then(res => res.json())
         .then(data => {
           const results = data.filter((item: any) => 

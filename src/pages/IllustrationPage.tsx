@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../config';
 import React, { useState, useEffect } from 'react';
 import { ChevronRight, ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -9,8 +10,8 @@ export function IllustrationPage() {
 
   useEffect(() => {
     Promise.all([
-      fetch('/api/collections').then(r => r.json()),
-      fetch('/api/products').then(r => r.json())
+      fetch(`${API_BASE_URL}/api/collections`).then(r => r.json()),
+      fetch(`${API_BASE_URL}/api/products`).then(r => r.json())
     ]).then(([collectionsData, productsData]) => {
       const illustrationProducts = Array.isArray(productsData) 
         ? productsData.filter(p => p.category_id === 5) 

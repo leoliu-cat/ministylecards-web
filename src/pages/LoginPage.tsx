@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../config';
 import React, { useState, useEffect } from 'react';
 import { Heart, Monitor, Headphones, MessageCircle, ArrowRight } from 'lucide-react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
@@ -47,7 +48,7 @@ export function LoginPage() {
      setErrorText("");
 
      try {
-         const res = await fetch('https://admin.ministylecards.com/api/auth/send-verification-code', {
+         const res = await fetch(`\${API_BASE_URL}/api/auth/send-verification-code`, {
              method: 'POST',
              headers: { 'Content-Type': 'application/json' },
              body: JSON.stringify({ email: inputValue })
@@ -74,7 +75,7 @@ export function LoginPage() {
       setErrorText("");
       
       try {
-         const res = await fetch('https://admin.ministylecards.com/api/auth/verify-code', {
+         const res = await fetch(`\${API_BASE_URL}/api/auth/verify-code`, {
              method: 'POST',
              headers: { 'Content-Type': 'application/json' },
              body: JSON.stringify({ email: inputValue, code: otpCode })

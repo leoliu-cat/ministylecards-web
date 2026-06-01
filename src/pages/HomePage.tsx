@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../config';
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { SEO } from '../components/SEO';
@@ -55,7 +56,7 @@ export function HomePage() {
   const [apiCollections, setApiCollections] = useState<any[]>([]);
 
   useEffect(() => {
-    fetch('/api/collections')
+    fetch(`${API_BASE_URL}/api/collections`)
       .then(res => res.json())
       .then(data => {
         setApiCollections(data.slice(0, 5));

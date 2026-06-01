@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../config';
 import React, { useState } from 'react';
 import { 
   Heart, ChevronRight, Check, Package, Clock, MapPin, 
@@ -77,8 +78,8 @@ export function ProductDetailPage() {
     setLoading(true);
     
     Promise.all([
-      fetch('/api/products').then(r => r.json()),
-      fetch('/api/collections').then(r => r.json())
+      fetch(`${API_BASE_URL}/api/products`).then(r => r.json()),
+      fetch(`${API_BASE_URL}/api/collections`).then(r => r.json())
     ])
       .then(([productsData, collectionsData]) => {
         const foundParam = productsData.find((p: any) => {
@@ -127,8 +128,7 @@ export function ProductDetailPage() {
       });
 
     // Fetch add-ons
-    fetch('/api/addon_groups')
-      .then(res => res.json())
+    fetch(`${API_BASE_URL}/api/addon_groups`).then(res => res.json())
       .then(data => {
          setAddonGroups(data);
          if (!editItem) {
@@ -154,7 +154,7 @@ export function ProductDetailPage() {
       .catch(console.error);
 
     // Fetch pricing rules
-    fetch('/api/admin/website/pricing_rules')
+    fetch(`${API_BASE_URL}/api/admin/website/pricing_rules`)
       .then(res => res.json())
       .then(data => {
          if (Array.isArray(data)) setPricingRules(data);

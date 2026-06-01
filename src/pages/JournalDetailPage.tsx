@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../config';
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { SEO } from '../components/SEO';
@@ -12,7 +13,7 @@ export function JournalDetailPage() {
 
   useEffect(() => {
     // Fetch article by slug or ID
-    fetch(`/api/posts/${journalId}`)
+    fetch(`${API_BASE_URL}/api/posts/${journalId}`)
       .then(res => res.json())
       .then(data => {
         if (!data.error) {

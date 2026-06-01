@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../config';
 import React, { useState } from 'react';
 import { Mail, MessageCircle, Instagram, MapPin, CheckCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -19,7 +20,7 @@ export function ContactPage() {
     const message = (form.elements[4] as HTMLTextAreaElement).value;
 
     try {
-      const response = await fetch('/api/send-email', {
+      const response = await fetch(`${API_BASE_URL}/api/send-email`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

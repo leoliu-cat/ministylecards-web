@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../config';
 import React, { useState, useEffect } from 'react';
 import { useParams, Navigate, Link } from 'react-router-dom';
 import { CategoryLayout, Product } from '../components/CategoryLayout';
@@ -12,8 +13,8 @@ export function CollectionDetailPage() {
 
   useEffect(() => {
     Promise.all([
-      fetch('/api/collections').then(r => r.json()),
-      fetch('/api/products').then(r => r.json())
+      fetch(`${API_BASE_URL}/api/collections`).then(r => r.json()),
+      fetch(`${API_BASE_URL}/api/products`).then(r => r.json())
     ]).then(([collectionsData, productsData]) => {
       // Find the collection matching the slug or ID
       const col = Array.isArray(collectionsData) ? collectionsData.find(c => c.slug === collectionId || String(c.id) === collectionId) : null;

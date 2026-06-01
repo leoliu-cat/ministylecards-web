@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../config';
 import React, { useEffect, useState } from 'react';
 import { CategoryLayout, Product } from '../components/CategoryLayout';
 
@@ -6,7 +7,7 @@ export function MarriageCertificatePage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/products')
+    fetch(`${API_BASE_URL}/api/products`)
       .then(res => res.json())
       .then(data => {
         const formattedProducts = data

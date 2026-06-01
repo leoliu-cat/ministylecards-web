@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../config';
 import React, { useState, useEffect } from 'react';
 import { useCart } from '../components/CartContext';
 import { useAuth } from '../components/AuthContext';
@@ -206,7 +207,7 @@ export function CheckoutPage() {
         let token = localStorage.getItem('website_token');
         // If no token, auto-register
         if (!token) {
-           const regRes = await fetch('https://admin.ministylecards.com/api/auth/register', {
+           const regRes = await fetch(`${API_BASE_URL}/api/auth/register`, {
                method: 'POST',
                headers: { 'Content-Type': 'application/json' },
                body: JSON.stringify({ 
@@ -229,7 +230,7 @@ export function CheckoutPage() {
         }
 
         // 1. Create order on backend directly (Server handles items calculation)
-        const orderRes = await fetch('https://admin.ministylecards.com/api/orders', {
+        const orderRes = await fetch(`${API_BASE_URL}/api/orders`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -278,8 +279,8 @@ export function CheckoutPage() {
            return;
         }
 
-        // 2. 因後台遺失 TapPay 金鑰，改由前端 Node 伺服器代理 TapPay 請求
-        const payRes = await fetch('/api/pay', {
+        // 2. 呼叫後端 API 處理 TapPay 金流 (使用 API_BASE_URL)
+        const payRes = await fetch(`${API_BASE_URL}/api/pay`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -303,7 +304,7 @@ export function CheckoutPage() {
 
         // 3. 通知遠端後端更新狀態為 paid
         try {
-           await fetch(`https://admin.ministylecards.com/api/orders/${orderData.orderId}`, {
+           await fetch(`${API_BASE_URL}/api/orders/${orderData.orderId}`, {
                method: 'PUT',
                headers: {
                    'Content-Type': 'application/json',
