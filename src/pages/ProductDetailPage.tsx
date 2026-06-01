@@ -155,7 +155,10 @@ export function ProductDetailPage() {
 
     // Fetch pricing rules
     fetch(`${API_BASE_URL}/api/admin/website/pricing_rules`)
-      .then(res => res.json())
+      .then(res => {
+         if (!res.ok) throw new Error('API Error ' + res.status);
+         return res.json();
+      })
       .then(data => {
          if (Array.isArray(data)) setPricingRules(data);
          else if (data && Array.isArray(data.docs)) setPricingRules(data.docs);
