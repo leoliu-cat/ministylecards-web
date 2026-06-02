@@ -22,7 +22,7 @@ export function JournalDetailPage() {
         setLoading(false);
       })
       .catch(err => {
-        console.error('Error fetching article:', err);
+        console.warn('Could not fetch article::', err.message || err);
         setLoading(false);
       });
   }, [journalId]);

@@ -29,6 +29,11 @@ async function startServer() {
   // Middleware to parse JSON bodies for our own custom routes
   app.use(express.json({ limit: '10mb' }));
 
+  app.post('/api/debug-log', (req, res) => {
+    console.log('\n\n[CLIENT DEBUG]\n', JSON.stringify(req.body, null, 2), '\n\n');
+    res.json({ ok: true });
+  });
+
   // API Route for sending email
   app.post("/api/send-email", async (req, res) => {
     try {

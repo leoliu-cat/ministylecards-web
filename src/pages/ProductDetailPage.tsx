@@ -123,7 +123,7 @@ export function ProductDetailPage() {
         setLoading(false);
       })
       .catch(error => {
-        console.error('Error fetching product data:', error);
+        console.warn('Could not fetch product data:', error.message);
         setLoading(false);
       });
 
@@ -133,7 +133,7 @@ export function ProductDetailPage() {
          setAddonGroups(data);
 /* defaults moved */
       })
-      .catch(console.error);
+      .catch(e => console.warn('Fetch error:', e.message));
 
     // Fetch pricing rules
     // Mock instead of fetch admin API to prevent 401 error
@@ -181,13 +181,16 @@ export function ProductDetailPage() {
   }, [productId]);
 
   React.useEffect(() => {
-    if (editItem || hasInitializedDefaults.current || addonGroups.length === 0 || !productData) return;
+    if (loading || editItem || hasInitializedDefaults.current || addonGroups.length === 0 || !productData) return;
     const isIdMatch = productData.id && productData.id.toString() === productId;
-    const isSlugMatch = productData.slug && productData.slug === productId;
-    if (productId && !isIdMatch && !isSlugMatch && productId !== '1') return;
+    const s1 = productData.slug ? productData.slug.toString().split('/').pop() : '';
+    const s2 = productId ? productId.split('/').pop() : '';
+    const isSlugMatch = s1 && s2 && s1 === s2;
+    if (productId && !isIdMatch && !isSlugMatch) return;
     hasInitializedDefaults.current = true;
 
     const defaults: Record<number, any> = {};
+    
     const productDefaults = productData.variants?.addon_group_defaults || {};
 
     addonGroups.forEach((group: any) => {
@@ -195,14 +198,15 @@ export function ProductDetailPage() {
            const pDefault = productDefaults[group.id.toString()];
            if (group.input_type === 'checkbox') {
                defaults[group.id] = pDefault === true || pDefault === 'true' || (Array.isArray(pDefault) && pDefault.length > 0);
-           } else if (group.title !== '信封選擇' && Array.isArray(pDefault) && pDefault.length > 0) {
-               defaults[group.id] = pDefault[0];
-           } else if (group.title !== '信封選擇' && typeof pDefault === 'string' && pDefault) {
-               defaults[group.id] = pDefault;
-           } else if (group.title !== '信封選擇' && group.options && group.options.length > 0) {
-               // Fallback to the add-on group global default option
-               const globalDefault = group.options.find((o: any) => o.is_default);
-               defaults[group.id] = globalDefault ? globalDefault.name : group.options[0].name;
+           } else if (group.title !== "信封選擇") {
+               if (Array.isArray(pDefault) && pDefault.length > 0) {
+                   defaults[group.id] = pDefault[0];
+               } else if (typeof pDefault === 'string' && pDefault) {
+                   defaults[group.id] = pDefault;
+               } else if (group.options && group.options.length > 0) {
+                   const globalDefault = group.options.find((o: any) => o.is_default);
+                   defaults[group.id] = globalDefault ? globalDefault.name : group.options[0].name;
+               }
            }
        } else {
            if (group.input_type === 'select' && group.options && group.options.length > 0) {
@@ -215,27 +219,30 @@ export function ProductDetailPage() {
     });
     setSelectedAddons(defaults);
 
-    const envGroup = addonGroups.find((g: any) => g.title === '信封選擇');
+    const envGroup = addonGroups.find((g: any) => g.display_group === '喜帖-信封區' || g.title === '信封選擇');
     if (envGroup) {
+        let finalEnvelopes = [];
         if (Object.prototype.hasOwnProperty.call(productDefaults, envGroup.id.toString())) {
              const pEnvDefaults = productDefaults[envGroup.id.toString()];
              if (Array.isArray(pEnvDefaults) && pEnvDefaults.length > 0) {
-                 setSelectedEnvelopes(pEnvDefaults);
+                 finalEnvelopes = pEnvDefaults;
              } else if (typeof pEnvDefaults === 'string' && pEnvDefaults) {
-                 setSelectedEnvelopes([pEnvDefaults]);
-             } else {
-                 // Fallback to global envelope default when explicitly empty / cleared
-                 const defaultEnvelopes = envGroup.options.filter((o: any) => o.is_default).map((o: any) => o.name);
-                 setSelectedEnvelopes(defaultEnvelopes.length > 0 ? defaultEnvelopes : []);
+                 finalEnvelopes = [pEnvDefaults];
              }
-        } else if (envGroup.options) {
-           const defaultEnvelopes = envGroup.options.filter((o: any) => o.is_default).map((o: any) => o.name);
-           if (defaultEnvelopes.length > 0) {
-               setSelectedEnvelopes(defaultEnvelopes);
-           }
         }
+        
+        if (finalEnvelopes.length === 0 && envGroup.options) {
+             const defaultEnvelopes = envGroup.options.filter((o: any) => o.is_default).map((o: any) => o.name);
+             if (defaultEnvelopes.length > 0) {
+                 finalEnvelopes = defaultEnvelopes;
+             } else if (envGroup.options.length > 0) {
+                 finalEnvelopes = [envGroup.options[0].name];
+             }
+        }
+        
+        setSelectedEnvelopes(finalEnvelopes);
     }
-  }, [productData, addonGroups, editItem, productId]);
+  }, [productData, addonGroups, editItem, productId, loading]);
 
   const [quantity, setQuantity] = useState(isWeddingInvitation ? 100 : 1);
   const [eventDate, setEventDate] = useState('');
@@ -448,7 +455,8 @@ export function ProductDetailPage() {
              }
          } else {
              const opt = group.options.find((o: any) => o.name === value);
-             if (!opt || opt.price === 0) return;
+             if (!opt) return;
+             // Include even if price is 0 so the option is in customizations
              addonName = opt.name;
              if (group.title === '封蠟章貼紙' && opt.price > 0) {
                 addonName += ` (${waxSealColor})`;
@@ -947,8 +955,9 @@ export function ProductDetailPage() {
                                          
                                          const group = addonGroups.find(g => g.id.toString() === groupId);
                                          if (!group) return null;
+                                         if (group.display_group === "喜帖-信封區" || group.title === "信封選擇") return null;
 
-                                         let priceStr = '';
+                                         let priceStr = "";
                                          let addonName = '';
                                          if (group.input_type === 'checkbox') {
                                              const opt = group.options[0];
@@ -965,7 +974,8 @@ export function ProductDetailPage() {
                                              priceStr = `NT$ ${formatPrice(p)}`;
                                          } else {
                                              const opt = group.options.find((o: any) => o.name === value);
-                                             if (!opt || opt.price === 0) return null;
+                                             if (!opt) return null;
+                                             // Do not skip free options so user sees what is selected
                                              addonName = opt.name;
                                              if (group.title === '封蠟章貼紙' && opt.price > 0) {
                                                 addonName += ` (${waxSealColor})`;

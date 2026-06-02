@@ -61,7 +61,7 @@ export function HomePage() {
       .then(data => {
         setApiCollections(data.slice(0, 5));
       })
-      .catch(err => console.error('Error fetching collections:', err));
+      .catch(err => console.warn('Could not fetch collections (possibly dev server restart):', err.message));
   }, []);
 
   // Use the fetched collections if available, otherwise fallback to hardcoded

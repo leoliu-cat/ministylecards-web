@@ -31,7 +31,7 @@ export function Layout() {
       .then(data => {
         setCategories(data);
       })
-      .catch(err => console.error('Error fetching categories:', err));
+      .catch(err => console.warn('Could not fetch categories::', err.message || err));
   }, []);
 
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);

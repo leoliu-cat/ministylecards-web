@@ -32,7 +32,7 @@ export function JournalPage() {
           setApiArticles(fullPosts);
         }
       })
-      .catch(err => console.error('Error fetching articles:', err));
+      .catch(err => console.warn('Could not fetch articles::', err.message || err));
   }, []);
 
   const displayArticles = apiArticles.map(a => {

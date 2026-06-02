@@ -31,7 +31,7 @@ export function CategoryLayout({ title, subtitle, breadcrumbs, products, hideCol
       .then(data => {
         setCollections(Array.isArray(data) ? data.slice(0, 5) : data);
       })
-      .catch(err => console.error('Error fetching collections:', err));
+      .catch(err => console.warn('Could not fetch collections (possibly dev server restart):', err.message));
   }, []);
 
   const filteredProducts = React.useMemo(() => {

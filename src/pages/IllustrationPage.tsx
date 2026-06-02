@@ -41,7 +41,7 @@ export function IllustrationPage() {
       setIllustrators(mappedIllustrators);
       setLoading(false);
     }).catch(err => {
-      console.error('Error fetching illustrators:', err);
+      console.warn('Could not fetch illustrators::', err.message || err);
       setLoading(false);
     });
   }, []);

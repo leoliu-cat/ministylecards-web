@@ -62,7 +62,7 @@ export function CollectionDetailPage() {
       }
       setLoading(false);
     }).catch(err => {
-      console.error('Error fetching collection detail:', err);
+      console.warn('Could not fetch collection detail::', err.message || err);
       setLoading(false);
     });
   }, [collectionId]);

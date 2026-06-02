@@ -28,7 +28,7 @@ export function CategoryPage() {
         setLoading(false);
       })
       .catch(error => {
-        console.error('Error fetching products:', error);
+        console.warn('Could not fetch products::', error.message || error);
         setLoading(false);
       });
   }, []);

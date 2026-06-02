@@ -66,7 +66,7 @@ export function EssentialDesignPage() {
       setLoading(false);
     })
     .catch(error => {
-      console.error('Error fetching essential design data:', error);
+      console.warn('Could not fetch essential design data::', error.message || error);
       setLoading(false);
     });
   }, []);
