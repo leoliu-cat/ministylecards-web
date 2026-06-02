@@ -131,25 +131,7 @@ export function ProductDetailPage() {
     fetch(`${API_BASE_URL}/api/addon_groups`).then(res => res.json())
       .then(data => {
          setAddonGroups(data);
-         if (!editItem) {
-            const defaults: Record<number, any> = {};
-            data.forEach((group: any) => {
-               if (group.input_type === 'select' && group.options && group.options.length > 0) {
-                  defaults[group.id] = group.options[0].name; // Default to first option
-               } else if (group.input_type === 'checkbox') {
-                  defaults[group.id] = false;
-               }
-            });
-            setSelectedAddons(defaults);
-
-            const envGroup = data.find((g: any) => g.title === '信封選擇');
-            if (envGroup && envGroup.options) {
-               const defaultEnvelopes = envGroup.options.filter((o: any) => o.is_default).map((o: any) => o.name);
-               if (defaultEnvelopes.length > 0) {
-                   setSelectedEnvelopes(defaultEnvelopes);
-               }
-            }
-         }
+/* defaults moved */
       })
       .catch(console.error);
 
@@ -191,6 +173,69 @@ export function ProductDetailPage() {
          ]);
 
   }, [productId]);
+
+
+  const hasInitializedDefaults = React.useRef(false);
+  React.useEffect(() => {
+    hasInitializedDefaults.current = false;
+  }, [productId]);
+
+  React.useEffect(() => {
+    if (editItem || hasInitializedDefaults.current || addonGroups.length === 0 || !productData) return;
+    const isIdMatch = productData.id && productData.id.toString() === productId;
+    const isSlugMatch = productData.slug && productData.slug === productId;
+    if (productId && !isIdMatch && !isSlugMatch && productId !== '1') return;
+    hasInitializedDefaults.current = true;
+
+    const defaults: Record<number, any> = {};
+    const productDefaults = productData.variants?.addon_group_defaults || {};
+
+    addonGroups.forEach((group: any) => {
+       if (Object.prototype.hasOwnProperty.call(productDefaults, group.id.toString())) {
+           const pDefault = productDefaults[group.id.toString()];
+           if (group.input_type === 'checkbox') {
+               defaults[group.id] = pDefault === true || pDefault === 'true' || (Array.isArray(pDefault) && pDefault.length > 0);
+           } else if (group.title !== '信封選擇' && Array.isArray(pDefault) && pDefault.length > 0) {
+               defaults[group.id] = pDefault[0];
+           } else if (group.title !== '信封選擇' && typeof pDefault === 'string' && pDefault) {
+               defaults[group.id] = pDefault;
+           } else if (group.title !== '信封選擇' && group.options && group.options.length > 0) {
+               // Fallback to the add-on group global default option
+               const globalDefault = group.options.find((o: any) => o.is_default);
+               defaults[group.id] = globalDefault ? globalDefault.name : group.options[0].name;
+           }
+       } else {
+           if (group.input_type === 'select' && group.options && group.options.length > 0) {
+              const globalDefault = group.options.find((o: any) => o.is_default);
+              defaults[group.id] = globalDefault ? globalDefault.name : group.options[0].name;
+           } else if (group.input_type === 'checkbox') {
+              defaults[group.id] = false;
+           }
+       }
+    });
+    setSelectedAddons(defaults);
+
+    const envGroup = addonGroups.find((g: any) => g.title === '信封選擇');
+    if (envGroup) {
+        if (Object.prototype.hasOwnProperty.call(productDefaults, envGroup.id.toString())) {
+             const pEnvDefaults = productDefaults[envGroup.id.toString()];
+             if (Array.isArray(pEnvDefaults) && pEnvDefaults.length > 0) {
+                 setSelectedEnvelopes(pEnvDefaults);
+             } else if (typeof pEnvDefaults === 'string' && pEnvDefaults) {
+                 setSelectedEnvelopes([pEnvDefaults]);
+             } else {
+                 // Fallback to global envelope default when explicitly empty / cleared
+                 const defaultEnvelopes = envGroup.options.filter((o: any) => o.is_default).map((o: any) => o.name);
+                 setSelectedEnvelopes(defaultEnvelopes.length > 0 ? defaultEnvelopes : []);
+             }
+        } else if (envGroup.options) {
+           const defaultEnvelopes = envGroup.options.filter((o: any) => o.is_default).map((o: any) => o.name);
+           if (defaultEnvelopes.length > 0) {
+               setSelectedEnvelopes(defaultEnvelopes);
+           }
+        }
+    }
+  }, [productData, addonGroups, editItem, productId]);
 
   const [quantity, setQuantity] = useState(isWeddingInvitation ? 100 : 1);
   const [eventDate, setEventDate] = useState('');
