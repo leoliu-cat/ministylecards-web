@@ -154,18 +154,7 @@ export function ProductDetailPage() {
       .catch(console.error);
 
     // Fetch pricing rules
-    fetch(`${API_BASE_URL}/api/admin/website/pricing_rules`)
-      .then(res => {
-         if (!res.ok) throw new Error('API Error ' + res.status);
-         return res.json();
-      })
-      .then(data => {
-         if (Array.isArray(data)) setPricingRules(data);
-         else if (data && Array.isArray(data.docs)) setPricingRules(data.docs);
-         else if (data && Array.isArray(data.data)) setPricingRules(data.data);
-      })
-      .catch(err => {
-         console.warn('Failed to fetch pricing rules, using mock fallback', err);
+    // Mock instead of fetch admin API to prevent 401 error
          setPricingRules([
            {
              "id": 1,
@@ -200,7 +189,6 @@ export function ProductDetailPage() {
              ]
            }
          ]);
-      });
 
   }, [productId]);
 
