@@ -341,7 +341,20 @@ export function ProductDetailPage() {
     allowedDisplayGroups = ['婚禮網站-加購區'];
   }
   
-  const addOnDisplayGroups = addonGroups.filter(g => allowedDisplayGroups.includes(g.display_group) && g.display_group !== '喜帖-信封區' && g.title !== '信封選擇');
+  const enabledGroupIds = productData.variants?.addon_group_ids || [];
+  const productDefaultsForFilter = productData.variants?.addon_group_defaults || {};
+
+  const addOnDisplayGroups = addonGroups.filter(g => {
+    // 1. Check if it fits the display_group for the category
+    if (!allowedDisplayGroups.includes(g.display_group) || g.display_group === '喜帖-信封區' || g.title === '信封選擇') {
+        return false;
+    }
+    // 2. Check if explicitly enabled in Payload CMS for this product
+    if (enabledGroupIds.length > 0 && !enabledGroupIds.includes(g.id)) {
+        return false;
+    }
+    return true;
+  });
 
   let addonTotal = 0;
   
@@ -436,7 +449,7 @@ export function ProductDetailPage() {
     if (Object.keys(selectedAddons).length > 0) {
       Object.entries(selectedAddons).forEach(([groupId, value]) => {
          if (!value) return;
-         const group = addonGroups.find(g => g.id.toString() === groupId);
+         const group = addOnDisplayGroups.find(g => g.id.toString() === groupId);
          if (!group) return;
          let addonName = '';
          let price = 0;
@@ -455,8 +468,7 @@ export function ProductDetailPage() {
              }
          } else {
              const opt = group.options.find((o: any) => o.name === value);
-             if (!opt) return;
-             // Include even if price is 0 so the option is in customizations
+             if (!opt || opt.price === 0) return;
              addonName = opt.name;
              if (group.title === '封蠟章貼紙' && opt.price > 0) {
                 addonName += ` (${waxSealColor})`;
@@ -974,8 +986,7 @@ export function ProductDetailPage() {
                                              priceStr = `NT$ ${formatPrice(p)}`;
                                          } else {
                                              const opt = group.options.find((o: any) => o.name === value);
-                                             if (!opt) return null;
-                                             // Do not skip free options so user sees what is selected
+                                             if (!opt || opt.price === 0) return null;
                                              addonName = opt.name;
                                              if (group.title === '封蠟章貼紙' && opt.price > 0) {
                                                 addonName += ` (${waxSealColor})`;

@@ -1,0 +1,482 @@
+{
+  "id": 11,
+  "title": "環遊世界｜護照 × 機票婚禮喜帖套組",
+  "slug": "passport-ticket-wedding-invitation-around-the-world",
+  "description": "# 環遊世界｜護照 × 機票婚禮喜帖套組\n\n把婚禮邀請函變成一場幸福旅程。\n\n以「Passport to Marriage」為設計概念，\n將護照、登機證與旅行元素融入婚禮喜帖之中，\n象徵兩人攜手展開人生的新旅程。\n\n套組包含護照造型封套、登機證婚禮邀請卡、旅行主題婚禮資訊卡與客製化信封，\n從收到喜帖的那一刻開始，就讓賓客感受到滿滿的儀式感與驚喜。\n\n---\n\n## 套組內容\n\n- 護照造型喜帖封套\n- 機票登機證婚禮邀請卡\n- 客製資訊排版\n- 美式信封\n- 信封燙金印刷設計\n\n---\n\n## 適合風格\n\n- 旅行主題婚禮\n- 海外婚禮 Destination Wedding\n- 遠距離戀愛故事\n- 喜愛自由旅行的新人\n- 歐式浪漫婚禮\n- 文青質感婚禮\n\n---\n\n## 客製內容\n\n- 新人姓名\n- 婚宴日期\n- 宴客地點\n- 婚紗照片\n- 婚禮流程資訊\n- 專屬旅行路線與城市元素\n\n讓每位收到喜帖的賓客，\n都像收到一張通往幸福的登機證。",
+  "base_price": 90,
+  "category_id": 1,
+  "collection_id": 1,
+  "images": [
+    "/uploads/around-the-world-passport-ticket-wedding-invitation-set.jpg",
+    "/uploads/passport-ticket-wedding-invitation-envelope-detail.jpg",
+    "/uploads/wedding-passport-invitation-cover.jpg",
+    "/uploads/passport-to-marriage-wedding-invitation-card.jpg"
+  ],
+  "variants": {
+    "items": [
+      {
+        "name": "機票+護照套餐",
+        "price": 90,
+        "description": "以護照與登機證為設計靈感，將婚禮邀請化身一場浪漫旅程。\n\n套組包含護照造型喜帖封套與機票登機證邀請卡，可客製新人姓名、婚宴資訊、婚紗照片與婚禮日期，打造專屬於你們的旅行主題婚禮喜帖。\n\n適合海外婚禮、旅行主題婚禮、Destination Wedding、遠距離戀愛故事等風格新人收藏與分享。",
+        "image": "/uploads/passport-ticket-wedding-invitation.jpg",
+        "image_alt": "護照造型婚禮喜帖搭配機票登機證邀請卡，紅色旅行主題婚禮喜帖設計，結合護照封套、登機證喜帖與客製燙金印刷"
+      }
+    ],
+    "addon_group_ids": [
+      4,
+      7,
+      6,
+      3,
+      5,
+      2,
+      1,
+      11
+    ],
+    "addon_group_defaults": {
+      "7": [
+        "乾燥粉"
+      ],
+      "11": []
+    }
+  },
+  "is_active": 1,
+  "seo_title": "環遊世界護照機票婚禮喜帖｜旅行主題婚禮邀請卡｜MinistyleCards",
+  "seo_description": "旅行主題婚禮喜帖推薦，結合護照喜帖、機票登機證邀請卡與婚禮時間軸設計。客製新人姓名、婚宴資訊與婚紗照片，打造專屬於你們的環遊世界婚禮喜帖。",
+  "created_at": "2026-06-02T08:57:27.305Z",
+  "is_wedding_invitation": true,
+  "image_alts": "[\"環遊世界主題婚禮喜帖套組，包含護照喜帖、機票登機證喜帖、婚禮時間軸卡與粉色信封，打造旅行風婚禮邀請函\",\"護照與登機證婚禮喜帖收納於粉色信封中，模擬旅行出發概念的婚禮邀請設計\",\"護照造型婚禮喜帖封套搭配機票登機證邀請卡，旅行主題婚禮喜帖設計與燙金印刷細節展示\",\"Passport to Marriage 護照婚禮喜帖內頁設計，結合世界地圖、旅行印章與新人資訊客製排版\"]",
+  "inclusions": [
+    "卡片雙面排版設計",
+    "美式信封",
+    "信封單面燙金",
+    "金屬燙金貼紙"
+  ],
+  "min_qty": 30,
+  "product_type": "custom_invitation",
+  "sort_order": 0,
+  "pricing_rule_id": null,
+  "addon_groups": [
+    {
+      "id": 4,
+      "title": "喜帖卡片燙金",
+      "input_type": "select",
+      "options": [
+        {
+          "name": "無需加購(原本就很好)[+0元]",
+          "price": 0,
+          "price_type": "per_item",
+          "is_default": true
+        },
+        {
+          "name": "單面燙金(未滿100份按100份計算)",
+          "price": 20,
+          "price_type": "min_100_per_item"
+        },
+        {
+          "name": "雙面燙金(未滿100份按100份計算)",
+          "price": 25,
+          "price_type": "min_100_per_item"
+        }
+      ],
+      "is_default_for_invitation": true,
+      "display_group": "喜帖-加購區",
+      "max_selections": 0
+    },
+    {
+      "id": 7,
+      "title": "信封選擇",
+      "input_type": "checkbox",
+      "options": [
+        {
+          "name": "酒釀紅",
+          "price": 0,
+          "price_type": "flat",
+          "is_default": true,
+          "image": "/uploads/envelope-wine-red.jpg",
+          "image_alt": "酒釀紅美式喜帖信封紙材｜質感婚禮信封設計｜MINIStyleCards"
+        },
+        {
+          "name": "胭脂紅",
+          "price": 0,
+          "price_type": "flat",
+          "image": "/uploads/envelope-carmin-red.jpg",
+          "image_alt": "胭脂紅美式喜帖信封紙材｜高級感婚禮信封設計｜MINIStyleCards"
+        },
+        {
+          "name": "太妃橘",
+          "price": 0,
+          "price_type": "flat",
+          "image": "/uploads/envelope-toffee.jpg",
+          "image_alt": "太妃糖色美式喜帖信封紙材｜暖色婚禮信封系列｜MINIStyleCards"
+        },
+        {
+          "name": "橘粉",
+          "price": 0,
+          "price_type": "flat",
+          "image": "/uploads/envelope-peach.jpg",
+          "image_alt": "橘粉美式喜帖信封紙材｜甜美婚禮信封系列｜MINIStyleCards"
+        },
+        {
+          "name": "乾燥粉",
+          "price": 0,
+          "price_type": "flat",
+          "image": "/uploads/envelope-nude-rose.jpg",
+          "image_alt": "乾燥粉美式喜帖信封紙材｜浪漫婚禮信封顏色｜MINIStyleCards"
+        },
+        {
+          "name": "蒼粉",
+          "price": 0,
+          "price_type": "flat",
+          "image": "/uploads/envelope-blush-pink.jpg",
+          "image_alt": "蒼粉美式喜帖信封紙材｜柔和婚禮信封設計｜MINIStyleCards"
+        },
+        {
+          "name": "裸膚",
+          "price": 0,
+          "price_type": "flat",
+          "image": "/uploads/envelope-nude.jpg",
+          "image_alt": "裸膚色美式喜帖信封紙材｜簡約婚禮信封系列｜MINIStyleCards"
+        },
+        {
+          "name": "奶茶",
+          "price": 0,
+          "price_type": "flat",
+          "image": "/uploads/envelope-hazelnut.jpg",
+          "image_alt": "奶茶色美式喜帖信封紙材｜自然風婚禮信封設計｜MINIStyleCards"
+        },
+        {
+          "name": "卡駝",
+          "price": 0,
+          "price_type": "flat",
+          "image": "/uploads/envelope-camel.jpg",
+          "image_alt": "焦糖棕美式喜帖信封紙材｜溫暖婚禮信封配色｜MINIStyleCards"
+        },
+        {
+          "name": "丁香紫",
+          "price": 0,
+          "price_type": "flat",
+          "image": "/uploads/envelope-lilac.jpg",
+          "image_alt": "丁香紫美式喜帖信封紙材｜柔美婚禮信封系列｜MINIStyleCards"
+        },
+        {
+          "name": "清水灰",
+          "price": 0,
+          "price_type": "flat",
+          "image": "/uploads/envelope-concrete-grey.jpg",
+          "image_alt": "水泥灰美式喜帖信封紙材｜現代極簡婚禮信封｜MINIStyleCards"
+        },
+        {
+          "name": "灰白玉",
+          "price": 0,
+          "price_type": "flat",
+          "image": "/uploads/envelope-sage-green.jpg",
+          "image_alt": "鼠尾草綠美式喜帖信封紙材｜高級婚禮信封顏色｜MINIStyleCards"
+        },
+        {
+          "name": "秋香綠",
+          "price": 0,
+          "price_type": "flat",
+          "image": "/uploads/envelope-autumn-green.jpg",
+          "image_alt": "秋日綠美式喜帖信封紙材｜婚禮信封顏色選擇｜MINIStyleCards"
+        },
+        {
+          "name": "墨綠",
+          "price": 0,
+          "price_type": "flat",
+          "image": "/uploads/envelope-dark-green.jpg",
+          "image_alt": "墨綠色美式喜帖信封紙材｜復古婚禮信封系列｜MINIStyleCards"
+        },
+        {
+          "name": "鐵灰藍",
+          "price": 0,
+          "price_type": "flat",
+          "image": "/uploads/envelope-dusty-blue.jpg",
+          "image_alt": "霧藍色美式喜帖信封紙材｜柔和婚禮信封設計｜MINIStyleCards"
+        },
+        {
+          "name": "天空藍",
+          "price": 0,
+          "price_type": "flat",
+          "image": "/uploads/envelope-sky-blue.jpg",
+          "image_alt": "天空藍美式喜帖信封紙材｜清新婚禮信封設計｜MINIStyleCards"
+        },
+        {
+          "name": "海軍藍",
+          "price": 0,
+          "price_type": "flat",
+          "image": "/uploads/envelope-navy-blue.jpg",
+          "image_alt": "深藍色美式喜帖信封紙材｜典雅婚禮信封設計｜MINIStyleCards"
+        }
+      ],
+      "is_default_for_invitation": true,
+      "display_group": "喜帖-信封區",
+      "max_selections": 0
+    },
+    {
+      "id": 6,
+      "title": "封蠟章貼紙",
+      "input_type": "select",
+      "options": [
+        {
+          "name": "金屬燙金貼紙（默認）[+0元]",
+          "price": 0,
+          "price_type": "per_item",
+          "is_default": true
+        },
+        {
+          "name": "封蠟貼紙（Save the Date）",
+          "price": 10,
+          "price_type": "per_item",
+          "image": "/uploads/wax-seal-sticker-save-the-date-ministylecards.jpg",
+          "image_alt": "婚禮封蠟貼紙 Save the Date 款式，多色封蠟貼紙設計，適合婚禮喜帖與婚禮邀請卡封口使用"
+        },
+        {
+          "name": "封蠟貼紙（With love）",
+          "price": 10,
+          "price_type": "per_item",
+          "image": "/uploads/wax-seal-sticker-with-love-ministylecards.jpg",
+          "image_alt": "婚禮封蠟貼紙 With Love 款式，多款金屬色系可選，適用於喜帖信封封口與婚禮小物包裝"
+        },
+        {
+          "name": "封蠟貼紙（牽手）",
+          "price": 10,
+          "price_type": "per_item",
+          "image": "/uploads/wax-seal-sticker-holding-hands-ministylecards.jpg",
+          "image_alt": "婚禮封蠟貼紙牽手圖樣，以新人牽手意象設計，多款金屬色系適用於喜帖與婚禮信封封口"
+        },
+        {
+          "name": "封蠟貼紙（花草）",
+          "price": 10,
+          "price_type": "per_item",
+          "image": "/uploads/wax-seal-sticker-botanical-branch-ministylecards.jpg",
+          "image_alt": "婚禮封蠟貼紙花草圖樣，自然植物風格設計，多色封蠟貼紙適合森林系與戶外婚禮喜帖搭配"
+        },
+        {
+          "name": "封蠟貼紙（帝王花）",
+          "price": 10,
+          "price_type": "per_item",
+          "image": "/uploads/wax-seal-sticker-protea-flower-ministylecards.jpg",
+          "image_alt": "婚禮封蠟貼紙帝王花圖樣，高雅花卉設計，多款金屬色系可選，適合質感婚禮喜帖封口裝飾"
+        },
+        {
+          "name": "封蠟貼紙（Ｍ Logo）",
+          "price": 10,
+          "price_type": "per_item",
+          "image": "/uploads/wax-seal-sticker-ministylecards-logo-ministylecards.jpg",
+          "image_alt": "MiniStyleCards 品牌封蠟貼紙 Logo 款式，多色封蠟貼紙設計，可搭配婚禮喜帖信封與客製化婚禮文具"
+        }
+      ],
+      "is_default_for_invitation": true,
+      "display_group": "喜帖-加購區",
+      "max_selections": 0
+    },
+    {
+      "id": 3,
+      "title": "信封內襯",
+      "input_type": "checkbox",
+      "options": [
+        {
+          "name": "信封內襯設計 (+20元/份)",
+          "price": 20,
+          "price_type": "per_item"
+        }
+      ],
+      "is_default_for_invitation": true,
+      "display_group": "喜帖-加購區",
+      "max_selections": 0
+    },
+    {
+      "id": 5,
+      "title": "加購副卡",
+      "input_type": "select",
+      "options": [
+        {
+          "name": "無需要加購(原本就很好)[+0元]",
+          "price": 0,
+          "price_type": "per_item",
+          "is_default": true
+        },
+        {
+          "name": "象牙材質小卡（單面10x14cm）20元/份",
+          "price": 20,
+          "price_type": "per_item"
+        },
+        {
+          "name": "象牙材質小卡（雙面10x14cm）25元/份",
+          "price": 25,
+          "price_type": "per_item"
+        },
+        {
+          "name": "象牙材質小卡（造型10x14cm）30元/份",
+          "price": 30,
+          "price_type": "per_item"
+        }
+      ],
+      "is_default_for_invitation": true,
+      "display_group": "喜帖-加購區",
+      "max_selections": 0
+    },
+    {
+      "id": 2,
+      "title": " 信封燙金 ",
+      "input_type": "checkbox",
+      "options": [
+        {
+          "name": " 信封燙金 (+6元/份 未滿100份按100份計)",
+          "price": 6,
+          "price_type": "min_100_per_item"
+        }
+      ],
+      "is_default_for_invitation": true,
+      "display_group": "喜帖-加購區",
+      "max_selections": 0
+    },
+    {
+      "id": 1,
+      "title": "加購雙人插畫",
+      "input_type": "select",
+      "options": [
+        {
+          "name": "美式無插畫款[+0元]",
+          "price": 0,
+          "price_type": "flat",
+          "is_default": true
+        },
+        {
+          "name": "Su Su 老師｜豆豆風雙人插畫",
+          "price": 2500,
+          "price_type": "flat",
+          "image": "/uploads/custom-wedding-portrait-illustration-dodoo-style-su-su-teacher-614777.jpg",
+          "image_alt": "MINIStyleCards 喜帖加購｜Su Su 老師豆豆風雙人插畫，客製婚禮似顏繪插畫服務",
+          "is_default": true
+        },
+        {
+          "name": "小著 老師｜色塊風雙人插畫",
+          "price": 1800,
+          "price_type": "flat",
+          "image": "/uploads/custom-wedding-portrait-color-block-style-xiao-zhu-teacher-669438.jpg",
+          "image_alt": "MINIStyleCards 喜帖加購｜小著 老師色塊風雙人插畫，客製婚禮雙人插畫服務"
+        },
+        {
+          "name": "小著 老師｜蠟筆風雙人插畫",
+          "price": 3000,
+          "price_type": "flat",
+          "image": "/uploads/custom-wedding-portrait-crayon-style-xiao-zhu-teacher-724895.jpg",
+          "image_alt": "MINIStyleCards 喜帖加購｜小著老師蠟筆風雙人插畫，溫柔手繪婚禮似顏繪"
+        },
+        {
+          "name": "soi soi 老師｜水彩風雙人插畫",
+          "price": 2800,
+          "price_type": "flat",
+          "image": "/uploads/custom-wedding-portrait-watercolor-style-soi-soi-teacher-750323.jpg",
+          "image_alt": "MINIStyleCards 喜帖加購｜soi soi 老師水彩風雙人插畫，手繪感婚禮似顏繪"
+        },
+        {
+          "name": "Li老師 | 韓風寫實雙人插畫",
+          "price": 7000,
+          "price_type": "flat",
+          "image": "/uploads/custom-wedding-portrait-korean-realistic-style-li-teacher-772085.jpg",
+          "image_alt": "MINIStyleCards 喜帖加購｜LI 老師韓風寫實雙人插畫，客製婚禮人像插畫"
+        },
+        {
+          "name": "戴花 老師｜可愛風雙人插畫",
+          "price": 2800,
+          "price_type": "flat",
+          "image": "/uploads/custom-wedding-portrait-cute-style-dai-hua-teacher-836941.jpg",
+          "image_alt": "MINIStyleCards 喜帖加購｜戴花老師可愛風雙人插畫，客製婚禮雙人似顏繪"
+        }
+      ],
+      "is_default_for_invitation": true,
+      "display_group": "喜帖-加購區",
+      "max_selections": 0
+    },
+    {
+      "id": 11,
+      "title": "壓克力飛機綁繩",
+      "input_type": "checkbox",
+      "options": [
+        {
+          "name": "壓克力飛機綁繩",
+          "price": 25,
+          "price_type": "per_item",
+          "is_default": true
+        }
+      ],
+      "is_default_for_invitation": false,
+      "display_group": "喜帖-加購區",
+      "max_selections": 0
+    }
+  ],
+  "category": {
+    "id": 1,
+    "name": "喜帖",
+    "slug": "wedding-invitations",
+    "is_wedding_invitation": 0
+  },
+  "related": [
+    {
+      "id": 10,
+      "title": "天涯海角｜旅行機票造型婚禮喜帖套組",
+      "slug": "travel-boarding-pass-wedding-invitation",
+      "description": "# 天涯海角｜旅行機票造型婚禮喜帖\n\n將愛情旅程化作一張登機證，\n\n邀請親友一同登上屬於你們的幸福航班。\n\n以機票與登機證為設計靈感，\n結合旅行元素、世界地圖、航線圖示與婚禮資訊，\n打造充滿故事感與收藏價值的婚禮喜帖。\n\n---\n\n## 商品特色\n\n✈ 登機證造型婚禮喜帖設計\n\n✈ 正反雙面客製排版\n\n✈ 可加入新人婚紗照\n\n✈ 可客製婚宴資訊與地圖\n\n✈ 搭配同色系歐式信封\n\n✈ 可加購封蠟貼紙、信封內襯與燙金加工\n\n---\n\n## 適合風格\n\n- 海外婚禮\n- 旅行主題婚禮\n- 飛機控新人\n- 遠距離戀愛故事\n- Destination Wedding\n- 歐美簡約婚禮\n\n---\n\n## 商品內容\n\n- 機票造型喜帖卡\n- 歐式信封\n- 基本客製排版\n\n※ 可依需求加購封蠟貼紙、燙金加工與信封內襯。\n\n---\n\n## 訂製流程\n\n1. 下單\n2. 提供婚宴資訊\n3. 設計排版確認\n4. 印刷製作\n5. 寄送出貨\n\n讓每一位收到喜帖的賓客，\n都像收到一張通往幸福旅程的登機證。",
+      "base_price": 65,
+      "category_id": 1,
+      "collection_id": 1,
+      "images": [
+        "/uploads/travel-boarding-pass-wedding-invitation-cover.jpg",
+        "/uploads/travel-boarding-pass-wedding-invitation-flatlay.jpg",
+        "/uploads/travel-boarding-pass-wedding-invitation-front-back.jpg",
+        "/uploads/travel-boarding-pass-wedding-invitation-envelope.jpg"
+      ],
+      "variants": "{\"items\":[{\"name\":\"單式套餐\",\"price\":65,\"description\":\"最經典的美式喜帖形式，簡潔俐落，價格最輕盈\",\"is_default\":true,\"image\":\"/uploads/E6E9C927-7CC0-4E01-B7BA-675A7110EE60.jpg\",\"image_alt\":\"中西合併現代中式婚禮喜帖與酒紅信封套組｜美式婚禮邀請卡客製設計｜MINIStyleCards\"},{\"name\":\"機票+護照套餐\",\"price\":90,\"description\":\"以護照與登機證為設計靈感，將婚禮邀請化身一場浪漫旅程。\\n\\n套組包含護照造型喜帖封套與機票登機證邀請卡，可客製新人姓名、婚宴資訊、婚紗照片與婚禮日期，打造專屬於你們的旅行主題婚禮喜帖。\\n\\n適合海外婚禮、旅行主題婚禮、Destination Wedding、遠距離戀愛故事等風格新人收藏與分享。\",\"image\":\"/uploads/passport-ticket-wedding-invitation.jpg\",\"image_alt\":\"護照造型婚禮喜帖搭配機票登機證邀請卡，紅色旅行主題婚禮喜帖設計，結合護照封套、登機證喜帖與客製燙金印刷\"}],\"addon_group_ids\":[4,7,6,3,5,2,1,11],\"addon_group_defaults\":{\"7\":[\"乾燥粉\"],\"11\":[]}}",
+      "is_active": 1,
+      "seo_title": "旅行機票造型婚禮喜帖｜登機證喜帖設計推薦｜MiniStyleCards",
+      "seo_description": "旅行主題婚禮必備！MiniStyleCards 機票造型婚禮喜帖，以登機證設計結合婚宴資訊與新人照片，適合海外婚禮、Destination Wedding 與旅行風婚禮，提供客製化排版與信封搭配。",
+      "created_at": "2026-06-02T08:18:13.497Z",
+      "is_wedding_invitation": 0,
+      "image_alts": [
+        "旅行機票造型婚禮喜帖套組，粉色信封搭配登機證風格喜帖設計，適合海外婚禮與旅行主題婚宴",
+        "旅行主題婚禮喜帖展示，包含登機證喜帖、婚禮邀請卡、粉色信封與封蠟貼紙搭配",
+        "登機證婚禮喜帖正反面設計展示，結合新人照片與婚宴資訊排版",
+        "機票造型婚禮喜帖置入粉色歐式信封展示，模擬登機證邀請卡收納效果"
+      ],
+      "inclusions": "[\"卡片雙面排版設計\",\"美式信封\",\"信封單面燙金\",\"金屬燙金貼紙\"]",
+      "min_qty": 30,
+      "product_type": "custom_invitation",
+      "sort_order": 0,
+      "pricing_rule_id": null
+    },
+    {
+      "id": 1,
+      "title": "美式喜帖 × 信封｜東方紅",
+      "slug": "/products/oriental-red-wedding-invitation",
+      "description": "以東方紅作為主視覺色調，\n將傳統喜氣與現代美式排版融合，呈現俐落、時尚又充滿儀式感的婚禮邀請。\n\nMINIStyleCards 擅長將婚禮細節轉化為值得收藏的設計作品，\n從紙材、燙金到整體版面配置，讓每一份喜帖不只是通知，更像是一場婚禮故事的開始。\n\n適合喜歡：\n\n* 現代中式婚禮風格\n* 精品感紅色系喜帖\n* 美式簡約排版\n* 保有東方喜氣但不過度傳統的新人",
+      "base_price": 65,
+      "category_id": 1,
+      "collection_id": 1,
+      "images": [
+        "/uploads/eastern-red-wedding-invitation-card-set-ministylecards.jpg",
+        "/uploads/eastern-red-wedding-invitation-envelope-suite-flatlay.jpg",
+        "/uploads/eastern-red-wedding-invitation-envelope-detail.jpg",
+        "/uploads/eastern-red-modern-wedding-invitation-card.jpg"
+      ],
+      "variants": "{\"items\":[{\"name\":\"單卡式套餐\",\"price\":65,\"description\":\"最經典的美式喜帖形式，簡潔俐落，價格最輕盈\",\"is_default\":true,\"image\":\"/uploads/E6E9C927-7CC0-4E01-B7BA-675A7110EE60-084858.jpg\",\"image_alt\":\"中西合併現代中式婚禮喜帖與酒紅信封套組｜美式婚禮邀請卡客製設計｜MINIStyleCards\"},{\"name\":\"雙卡式套餐\",\"price\":80,\"description\":\"資訊更完整，層次更豐富，適合需要更多內容的你\",\"is_default\":false,\"image\":\"/uploads/american-double-card-wedding-invitation-set-122795.jpg\",\"image_alt\":\"雙卡式婚禮喜帖套組展示｜美式照片喜帖與燙金酒紅信封設計｜MINIStyleCards\"}],\"addon_group_ids\":[1,2,3,4,5,6,7],\"addon_group_defaults\":{\"7\":[\"酒釀紅\"]}}",
+      "is_active": 1,
+      "seo_title": "東方紅美式喜帖｜現代中式婚禮喜帖設計・客製化信封燙金｜MINIStyleCards",
+      "seo_description": "MINIStyleCards 東方紅美式喜帖，結合現代中式美學與美式排版風格，提供客製化喜帖、信封燙金、金屬貼紙與婚禮設計服務，打造高質感婚禮邀請體驗。",
+      "created_at": "2026-05-21T04:17:52.856Z",
+      "is_wedding_invitation": 0,
+      "image_alts": [
+        "東方紅美式喜帖與酒紅信封套組展示｜婚禮喜帖客製設計｜MINIStyleCards",
+        "東方紅美式婚禮喜帖正卡設計｜照片喜帖與燙金排版｜MINIStyleCards",
+        "東方紅婚禮喜帖內容展示｜美式邀請卡與婚宴資訊排版設計｜MINIStyleCards",
+        "東方紅酒紅信封與婚禮喜帖套組｜美式信封燙金設計｜MINIStyleCards"
+      ],
+      "inclusions": "[\"卡片雙面排版設計\",\"美式信封\",\"信封單面燙金\",\"金屬燙金貼紙\",\"電子喜帖圖片檔案\"]",
+      "min_qty": 30,
+      "product_type": "custom_invitation",
+      "sort_order": 7,
+      "pricing_rule_id": null
+    }
+  ]
+}

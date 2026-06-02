@@ -1,0 +1,1 @@
+console.log(JSON.stringify(p11.variants) === JSON.stringify(p10.variants))
