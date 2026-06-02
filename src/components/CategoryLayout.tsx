@@ -23,6 +23,9 @@ export function CategoryLayout({ title, subtitle, breadcrumbs, products, hideCol
   const [collections, setCollections] = React.useState<any[]>([]);
   const [selectedCollection, setSelectedCollection] = React.useState<number | null>(null);
   const [sortMethod, setSortMethod] = React.useState<string>('熱門商品');
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const itemsPerPage = 12;
+
   const { toggleFavorite, isFavorited } = useFavorites();
 
   React.useEffect(() => {
@@ -33,6 +36,10 @@ export function CategoryLayout({ title, subtitle, breadcrumbs, products, hideCol
       })
       .catch(err => console.warn('Could not fetch collections (possibly dev server restart):', err.message));
   }, []);
+
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [products, selectedCollection, sortMethod]);
 
   const filteredProducts = React.useMemo(() => {
     let result = products;
@@ -56,6 +63,27 @@ export function CategoryLayout({ title, subtitle, breadcrumbs, products, hideCol
       }
     });
   }, [products, selectedCollection, sortMethod]);
+
+  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+  const paginatedProducts = filteredProducts.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+  const getPageNumbers = () => {
+    const pages = [];
+    if (totalPages <= 5) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      if (currentPage <= 3) {
+        pages.push(1, 2, 3, 4, '...', totalPages);
+      } else if (currentPage >= totalPages - 2) {
+        pages.push(1, '...', totalPages - 3, totalPages - 2, totalPages - 1, totalPages);
+      } else {
+        pages.push(1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages);
+      }
+    }
+    return pages;
+  };
 
   return (
     <div className="pt-28 pb-20 px-4 md:px-12 max-w-7xl mx-auto">
@@ -133,7 +161,7 @@ export function CategoryLayout({ title, subtitle, breadcrumbs, products, hideCol
       <div className="w-full">
         {/* Product Grid */}
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-10 md:gap-x-6 md:gap-y-12">
-          {filteredProducts.map((product) => {
+          {paginatedProducts.map((product) => {
             const rawSlug = (product as any).slug || product.id;
             const cleanSlug = rawSlug.toString().replace(/^\/products?\//, '');
             const favId = product.id;
@@ -160,19 +188,41 @@ export function CategoryLayout({ title, subtitle, breadcrumbs, products, hideCol
         </div>
 
         {/* Pagination */}
-        <div className="mt-16 flex justify-center items-center gap-2 font-serif text-sm">
-          <button className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-900">
-            <ChevronRight size={16} className="rotate-180" />
-          </button>
-          <button className="w-8 h-8 flex items-center justify-center border border-[#d5a587] text-[#8b4e36] rounded">1</button>
-          <button className="w-8 h-8 flex items-center justify-center hover:bg-gray-50 rounded">2</button>
-          <button className="w-8 h-8 flex items-center justify-center hover:bg-gray-50 rounded">3</button>
-          <span className="w-8 h-8 flex items-center justify-center text-gray-400">...</span>
-          <button className="w-8 h-8 flex items-center justify-center hover:bg-gray-50 rounded">8</button>
-          <button className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-900">
-            <ChevronRight size={16} />
-          </button>
-        </div>
+        {totalPages > 1 && (
+          <div className="mt-16 flex justify-center items-center gap-2 font-serif text-sm">
+            <button 
+              className={`w-8 h-8 flex items-center justify-center rounded ${currentPage === 1 ? 'text-gray-300 cursor-not-allowed' : 'text-gray-400 hover:text-gray-900'}`}
+              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+            >
+              <ChevronRight size={16} className="rotate-180" />
+            </button>
+            {getPageNumbers().map((page, idx) => (
+              page === '...' ? (
+                <span key={`ellipsis-${idx}`} className="w-8 h-8 flex items-center justify-center text-gray-400">...</span>
+              ) : (
+                <button 
+                  key={page}
+                  className={`w-8 h-8 flex items-center justify-center rounded transition-colors ${
+                    currentPage === page 
+                      ? 'border border-[#d5a587] text-[#8b4e36]' 
+                      : 'hover:bg-gray-50 text-gray-600 hover:text-gray-900'
+                  }`}
+                  onClick={() => setCurrentPage(page as number)}
+                >
+                  {page}
+                </button>
+              )
+            ))}
+            <button 
+              className={`w-8 h-8 flex items-center justify-center rounded ${currentPage === totalPages ? 'text-gray-300 cursor-not-allowed' : 'text-gray-400 hover:text-gray-900'}`}
+              onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages}
+            >
+              <ChevronRight size={16} />
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
