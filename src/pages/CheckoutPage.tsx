@@ -250,8 +250,6 @@ export function CheckoutPage() {
                     const itemConfig: Record<string, any> = {};
                     if (i.image) itemConfig["image"] = i.image.startsWith('http') ? i.image : `https://admin.ministylecards.com${i.image}`;
                     if (i.paper) itemConfig["款式"] = i.paper;
-                    if (i.waxSeal) itemConfig["蠟封"] = i.waxSeal;
-                    if (i.envelopes && i.envelopes.length > 0) itemConfig["信封選擇"] = i.envelopes.join('、');
                     if (i.eventDate) itemConfig["Event Date"] = i.eventDate;
                     if (i.baseQuantity) itemConfig["Base Quantity"] = i.baseQuantity;
                     

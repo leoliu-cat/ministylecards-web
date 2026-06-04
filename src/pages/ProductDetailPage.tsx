@@ -392,6 +392,7 @@ export function ProductDetailPage() {
   });
 
   let setupFee = 0;
+  let setupFeeThreshold = 100;
   let invitationDiscountRate = 1;
   let baseUnitPrice = isWeddingInvitation && selectedVariant ? selectedVariant.price : Number(productData.price);
   let formatTotal = baseUnitPrice * quantity;
@@ -426,9 +427,18 @@ export function ProductDetailPage() {
   }
 
   if (isWeddingInvitation) {
-      if (quantity >= 30 && quantity <= 50) setupFee = 2000;
-      else if (quantity >= 51 && quantity <= 79) setupFee = 1500;
-      else if (quantity >= 80 && quantity <= 99) setupFee = 1000;
+      const isAcrylic = selectedVariant && selectedVariant.name.includes('壓克力');
+      
+      if (isAcrylic) {
+          setupFeeThreshold = 50;
+          if (quantity < 50) setupFee = 2000;
+          else setupFee = 0;
+      } else {
+          setupFeeThreshold = 100;
+          if (quantity >= 30 && quantity <= 50) setupFee = 2000;
+          else if (quantity >= 51 && quantity <= 79) setupFee = 1500;
+          else if (quantity >= 80 && quantity <= 99) setupFee = 1000;
+      }
 
       if (quantity >= 500) invitationDiscountRate = 0.7;
       else if (quantity >= 400) invitationDiscountRate = 0.8;
@@ -506,7 +516,7 @@ export function ProductDetailPage() {
       customizations.push({
          id: Math.random().toString(36).substring(2, 9),
          name: '基本上機費',
-         desc: '數量未滿 100 份酌收基本上機費',
+         desc: `數量未滿 ${setupFeeThreshold} 份酌收基本上機費`,
          price: setupFee
       });
     }
@@ -656,7 +666,7 @@ export function ProductDetailPage() {
 
                   <div className="flex flex-wrap gap-x-6 gap-y-3 text-[13px] text-gray-700 mb-8 pb-8 border-b border-gray-200/60 font-medium tracking-wide">
                      <div className="flex items-center gap-2"><Package size={16} className="text-[#c98f6a] stroke-[1.5]" /> {isWeddingInvitation ? '30份起訂' : '1個起訂'}</div>
-                     {isWeddingInvitation && <div className="flex items-center gap-2"><Package size={16} className="text-[#c98f6a] stroke-[1.5]" /> 滿100份免基本機費</div>}
+                     {isWeddingInvitation && <div className="flex items-center gap-2"><Package size={16} className="text-[#c98f6a] stroke-[1.5]" /> 滿{setupFeeThreshold}份免基本機費</div>}
                      <div className="flex items-center gap-2"><MapPin size={16} className="text-[#c98f6a] stroke-[1.5]" /> 台灣印製</div>
                   </div>
 
@@ -752,7 +762,7 @@ export function ProductDetailPage() {
                               <div className="w-14 text-center text-[15px] font-medium tracking-wide">{quantity}</div>
                               <button onClick={() => handleQuantityChange(quantity + 10, 1)} className="px-3.5 py-1.5 text-gray-500 hover:bg-gray-50 transition-colors"><Plus size={14}/></button>
                            </div>
-                           {isWeddingInvitation && <p className="text-[13px] text-gray-600 tracking-wide font-medium">滿100份免基本機費</p>}
+                           {isWeddingInvitation && <p className="text-[13px] text-gray-600 tracking-wide font-medium">滿{setupFeeThreshold}份免基本機費</p>}
                         </div>
                         <p className="text-[12px] text-gray-400 tracking-wide">{isWeddingInvitation ? '30份起訂' : '1個/本起訂'}</p>
                      </div>
@@ -937,7 +947,7 @@ export function ProductDetailPage() {
                               <div className="w-12 text-center text-[14px] font-medium">{quantity}</div>
                               <button onClick={() => handleQuantityChange(quantity + 10, 1)} className="px-3 py-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-colors"><Plus size={14}/></button>
                            </div>
-                           {isWeddingInvitation && <span className="text-[12px] text-[#c98f6a] bg-[#faf8f5] px-2 py-1 rounded tracking-wide">滿100份免基本機費</span>}
+                           {isWeddingInvitation && <span className="text-[12px] text-[#c98f6a] bg-[#faf8f5] px-2 py-1 rounded tracking-wide">滿{setupFeeThreshold}份免基本機費</span>}
                         </div>
                      </div>
 
@@ -1032,7 +1042,7 @@ export function ProductDetailPage() {
                         )}
                         {setupFee > 0 && (
                            <div className="flex justify-between items-center text-gray-600">
-                              <span>基本上機費用 <br/><span className="text-[11px] text-[#c98f6a] block mt-0.5">(未滿100份酌收)</span></span>
+                              <span>基本上機費用 <br/><span className="text-[11px] text-[#c98f6a] block mt-0.5">(未滿{setupFeeThreshold}份酌收)</span></span>
                               <span className="font-medium text-[15px] text-gray-800">NT$ {formatPrice(setupFee)}</span>
                            </div>
                         )}

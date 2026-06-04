@@ -46,6 +46,7 @@ export function CategoryPage() {
         subtitle="Invitations"
         breadcrumbs={[{ label: '首頁', to: '/' }, { label: '喜帖' }]}
         products={products}
+        hideCollections={false}
       />
     </>
   );

@@ -19,7 +19,7 @@ interface CategoryLayoutProps {
   hideCollections?: boolean;
 }
 
-export function CategoryLayout({ title, subtitle, breadcrumbs, products, hideCollections = false }: CategoryLayoutProps) {
+export function CategoryLayout({ title, subtitle, breadcrumbs, products, hideCollections = true }: CategoryLayoutProps) {
   const [collections, setCollections] = React.useState<any[]>([]);
   const [selectedCollection, setSelectedCollection] = React.useState<number | null>(null);
   const [sortMethod, setSortMethod] = React.useState<string>('熱門商品');
