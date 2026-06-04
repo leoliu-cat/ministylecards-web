@@ -13,62 +13,29 @@ export function IllustrationPage() {
       fetch(`${API_BASE_URL}/api/collections`).then(r => r.json()),
       fetch(`${API_BASE_URL}/api/products`).then(r => r.json())
     ]).then(([collectionsData, productsData]) => {
-      const illustrationProducts = Array.isArray(productsData) 
-        ? productsData.filter(p => p.category_id === 5) 
+      // Find illustrator collections based on title or slug
+      const illustratorCollections = Array.isArray(collectionsData) 
+        ? collectionsData.filter(c => c.slug.includes('illustrator') || c.title.includes('老師') || c.title.includes('插畫師') || c.title.includes('插畫繪製'))
         : [];
       
-      const worksCountByCollection: Record<number, number> = {};
-      const firstProductByCollection: Record<number, any> = {};
+      const mappedIllustrators = illustratorCollections.map(c => {
+         // Find products associated with this collection
+         const worksCount = Array.isArray(productsData) ? productsData.filter(p => p.collection_id === c.id).length : 0;
+         
+         let authorName = c.title;
+         if (c.title && c.title.includes("｜")) {
+            authorName = c.title.split("｜")[0].trim(); // Extract name before '｜'
+         }
 
-      illustrationProducts.forEach(p => {
-        if (p.collection_id) {
-           worksCountByCollection[p.collection_id] = (worksCountByCollection[p.collection_id] || 0) + 1;
-           if (!firstProductByCollection[p.collection_id]) {
-               firstProductByCollection[p.collection_id] = p;
-           }
-        }
-      });
-
-      const collectionsMap: Record<number, any> = {};
-      if (Array.isArray(collectionsData)) {
-          collectionsData.forEach(c => collectionsMap[c.id] = c);
-      }
-      
-      const activeCollectionIds = Object.keys(worksCountByCollection).map(Number);
-
-      const mappedIllustrators = activeCollectionIds.map(cid => {
-          const c = collectionsMap[cid];
-          if (c) {
-            return {
-              id: c.id,
-              name: c.title,
-              slug: c.slug,
-              works: worksCountByCollection[cid],
-              image: c.cover_image 
+         return {
+            id: c.id,
+            name: authorName,
+            slug: c.slug,
+            works: worksCount,
+            image: c.cover_image 
                 ? `https://admin.ministylecards.com${c.cover_image}` 
                 : 'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=300&q=80'
-            };
-          } else {
-             // Fallback to generating a faux collection from the first product
-             const p = firstProductByCollection[cid];
-             let authorName = "特約插畫師";
-             if (p && p.title && p.title.includes("｜")) {
-                const parts = p.title.split("｜");
-                if (parts.length > 1) {
-                   authorName = parts[1].split(" ")[0]; // Extract name after '｜'
-                }
-             }
-
-             return {
-               id: cid,
-               name: authorName, 
-               slug: cid.toString(),
-               works: worksCountByCollection[cid],
-               image: p && p.images && p.images.length > 0 
-                ? `https://admin.ministylecards.com${p.images[0]}` 
-                : 'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=300&q=80'
-             };
-          }
+         };
       });
 
       setIllustrators(mappedIllustrators);
