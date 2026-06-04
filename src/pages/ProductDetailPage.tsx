@@ -573,8 +573,8 @@ export function ProductDetailPage() {
   return (
     <>
       <SEO 
-        title={`${productData.title} | Mini Style Cards`}
-        description={productData.description || `Mini Style Cards ${productData.title}，打造最完美的客製化婚禮設計。`}
+        title={productData.seo_title || `${productData.title} | Mini Style Cards`}
+        description={productData.seo_description || productData.description || `Mini Style Cards ${productData.title}，打造最完美的客製化婚禮設計。`}
         url={`https://ministylecards.com/product/${productData.id}`}
         image={productData.image}
         jsonLd={productJsonLd}

@@ -1,22 +1,61 @@
-import React from 'react';
+import { API_BASE_URL } from '../config';
+import React, { useEffect, useState } from 'react';
 import { CategoryLayout, Product } from '../components/CategoryLayout';
-
-const products: Product[] = [
-  { id: 1, title: '春日煦風 | 喜帖套組', price: 95, image: 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=600&q=80' },
-  { id: 2, title: '夏夜星空 | 信封組合', price: 110, image: 'https://images.unsplash.com/photo-1523438885200-e635ba2c371e?auto=format&fit=crop&w=600&q=80' },
-  { id: 3, title: '秋日私語 | 邀請函', price: 85, image: 'https://images.unsplash.com/photo-1529634806980-85c3dd6d34ac?auto=format&fit=crop&w=600&q=80' },
-  { id: 4, title: '晨光微露 | 燙金款式', price: 120, image: 'https://images.unsplash.com/photo-1623000674215-dc34091a1d95?auto=format&fit=crop&w=600&q=80' },
-  { id: 5, title: '繁花似錦 | 似顏繪版', price: 140, image: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=600&q=80' },
-  { id: 6, title: '極簡都會 | 摩登系列', price: 90, image: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=600&q=80' },
-];
+import { SEO } from '../components/SEO';
 
 export function NewArrivalPage() {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch(`${API_BASE_URL}/api/products`)
+      .then(res => res.json())
+      .then(data => {
+        // Sort by created_at or id descending
+        const sortedData = data.sort((a: any, b: any) => {
+          const dateA = new Date(a.created_at || 0).getTime();
+          const dateB = new Date(b.created_at || 0).getTime();
+          if (dateA !== dateB) {
+            return dateB - dateA;
+          }
+          return b.id - a.id;
+        });
+
+        const formattedProducts = sortedData
+          .slice(0, 16) // Top 16
+          .map((item: any) => ({
+          id: item.id,
+          title: item.title,
+          price: item.base_price,
+          slug: item.slug,
+          collection_id: item.collection_id,
+          image: item.images && item.images.length > 0 
+            ? `https://admin.ministylecards.com${item.images[0]}`
+            : 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=600&q=80'
+        }));
+        setProducts(formattedProducts);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.warn('Could not fetch products::', error.message || error);
+        setLoading(false);
+      });
+  }, []);
+
   return (
-    <CategoryLayout 
-      title="最新商品" 
-      subtitle="New Arrivals"
-      breadcrumbs={[{ label: '首頁', to: '/' }, { label: '最新商品' }]}
-      products={products}
-    />
+    <>
+      <SEO 
+        title="最新商品 | Mini Style Cards"
+        description="Mini Style Cards 最新商品上架，快來看看我們為您準備的最新客製化婚禮設計與周邊商品。"
+        url="https://ministylecards.com/new-arrivals"
+      />
+      <CategoryLayout 
+        title="最新商品" 
+        subtitle="New Arrivals"
+        breadcrumbs={[{ label: '首頁', to: '/' }, { label: '最新商品' }]}
+        products={products}
+        hideCollections={true}
+      />
+    </>
   );
 }
