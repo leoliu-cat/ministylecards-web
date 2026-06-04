@@ -17,11 +17,35 @@ export function CollectionDetailPage() {
       fetch(`${API_BASE_URL}/api/products`).then(r => r.json())
     ]).then(([collectionsData, productsData]) => {
       // Find the collection matching the slug or ID
-      const col = Array.isArray(collectionsData) ? collectionsData.find(c => c.slug === collectionId || String(c.id) === collectionId) : null;
+      let col = Array.isArray(collectionsData) ? collectionsData.find(c => c.slug === collectionId || String(c.id) === collectionId) : null;
       
+      let colProducts = [];
+      if (!col) {
+         // Create a faux collection from products
+         const fauxProducts = Array.isArray(productsData) ? productsData.filter(p => String(p.collection_id) === collectionId) : [];
+         if (fauxProducts.length > 0) {
+            colProducts = fauxProducts;
+            const p = fauxProducts[0];
+            let fauxTitle = "系列商品";
+            if (p.category_id === 5 && p.title.includes("｜")) {
+                fauxTitle = p.title.split("｜")[1].split(" ")[0];
+            } else if (p.category_id === 5) {
+                fauxTitle = "特約插畫師";
+            }
+            col = {
+               id: p.collection_id,
+               title: fauxTitle,
+               slug: String(p.collection_id),
+               cover_image: p.images && p.images.length > 0 ? p.images[0] : null,
+               description: "精選系列商品"
+            };
+         }
+      } else {
+         colProducts = Array.isArray(productsData) ? productsData.filter(p => p.collection_id === col.id) : [];
+      }
+
       if (col) {
         setCollection(col);
-        const colProducts = Array.isArray(productsData) ? productsData.filter(p => p.collection_id === col.id) : [];
         if (colProducts.length > 0) {
            const categoryId = colProducts[0].category_id;
            

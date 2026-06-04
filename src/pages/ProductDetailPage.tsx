@@ -63,6 +63,7 @@ export function ProductDetailPage() {
 
   const category = getCategoryName(productData.category_id);
   const isWeddingInvitation = category.includes('喜帖');
+  const isMarriageCertificate = category.includes('書約');
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [addonGroups, setAddonGroups] = useState<any[]>([]);
@@ -394,7 +395,7 @@ export function ProductDetailPage() {
   let setupFee = 0;
   let setupFeeThreshold = 100;
   let invitationDiscountRate = 1;
-  let baseUnitPrice = isWeddingInvitation && selectedVariant ? selectedVariant.price : Number(productData.price);
+  let baseUnitPrice = (isWeddingInvitation || isMarriageCertificate) && selectedVariant ? selectedVariant.price : Number(productData.price);
   let formatTotal = baseUnitPrice * quantity;
   
   // Find applied pricing rule
@@ -524,7 +525,7 @@ export function ProductDetailPage() {
     const cartItem = {
       productId: productData.id,
       name: `${category} | ${productData.title}`,
-      baseQuantity: isWeddingInvitation ? `${quantity} 份` : `${quantity} 個`,
+      baseQuantity: isWeddingInvitation ? `${quantity} 份` : (isMarriageCertificate ? `${quantity} 組` : `${quantity} 個`),
       eventDate,
       paper: selectedVariant ? selectedVariant.name : undefined,
       size: undefined,
@@ -665,7 +666,7 @@ export function ProductDetailPage() {
                   )}
 
                   <div className="flex flex-wrap gap-x-6 gap-y-3 text-[13px] text-gray-700 mb-8 pb-8 border-b border-gray-200/60 font-medium tracking-wide">
-                     <div className="flex items-center gap-2"><Package size={16} className="text-[#c98f6a] stroke-[1.5]" /> {isWeddingInvitation ? '30份起訂' : '1個起訂'}</div>
+                     <div className="flex items-center gap-2"><Package size={16} className="text-[#c98f6a] stroke-[1.5]" /> {isWeddingInvitation ? '30份起訂' : (isMarriageCertificate ? '1組起訂' : '1個/本起訂')}</div>
                      {isWeddingInvitation && <div className="flex items-center gap-2"><Package size={16} className="text-[#c98f6a] stroke-[1.5]" /> 滿{setupFeeThreshold}份免基本機費</div>}
                      <div className="flex items-center gap-2"><MapPin size={16} className="text-[#c98f6a] stroke-[1.5]" /> 台灣印製</div>
                   </div>
@@ -696,10 +697,10 @@ export function ProductDetailPage() {
             </div>
 
             {/* Step 1: Formats */}
-            {isWeddingInvitation && (
+            {(isWeddingInvitation || isMarriageCertificate) && variants && variants.length > 0 && (
                <div className="mb-14">
-                  <h3 className="text-xl font-medium mb-6 font-serif">選擇喜帖形式</h3>
-                  <p className="text-[13px] text-gray-500 mb-6 tracking-wide">不同形式的喜帖，創造不同的體驗與驚喜感！</p>
+                  <h3 className="text-xl font-medium mb-6 font-serif">{isMarriageCertificate ? '選擇書約套餐' : '選擇喜帖形式'}</h3>
+                  <p className="text-[13px] text-gray-500 mb-6 tracking-wide">{isMarriageCertificate ? '依據需求選購不同套餐組合，創造專屬的珍藏記憶！' : '不同形式的喜帖，創造不同的體驗與驚喜感！'}</p>
                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
                   {variants.map((f: any, index: number) => (
                      <div 
@@ -723,7 +724,7 @@ export function ProductDetailPage() {
                                  <p className="text-[11px] text-gray-500 leading-snug line-clamp-2">{f.description}</p>
                               </div>
                               <div className="mt-1.5 text-[13px] text-[#8b4e36] font-medium tracking-wide">
-                                 NT$ {f.price} <span className="text-[10px] text-gray-400 font-normal">/ 份</span>
+                                 NT$ {f.price} <span className="text-[10px] text-gray-400 font-normal">/ {isWeddingInvitation ? '份' : '組'}</span>
                               </div>
                            </div>
                         </div>
@@ -764,7 +765,7 @@ export function ProductDetailPage() {
                            </div>
                            {isWeddingInvitation && <p className="text-[13px] text-gray-600 tracking-wide font-medium">滿{setupFeeThreshold}份免基本機費</p>}
                         </div>
-                        <p className="text-[12px] text-gray-400 tracking-wide">{isWeddingInvitation ? '30份起訂' : '1個/本起訂'}</p>
+                        <p className="text-[12px] text-gray-400 tracking-wide">{isWeddingInvitation ? '30份起訂' : (isMarriageCertificate ? '1組起訂' : '1個/本起訂')}</p>
                      </div>
                   </div>
 
@@ -925,17 +926,17 @@ export function ProductDetailPage() {
             <div className="sticky top-24">
                <div className="border border-gray-200/60 rounded-2xl bg-white shadow-sm overflow-hidden">
                   <div className="p-6 xl:p-8 bg-gradient-to-b from-[#faf8f5]/50 to-white">
-                     <h3 className="text-[15px] font-medium mb-6 font-serif">{isWeddingInvitation ? '已選擇的喜帖' : '已選擇的商品'}</h3>
+                     <h3 className="text-[15px] font-medium mb-6 font-serif">{isWeddingInvitation ? '已選擇的喜帖' : (isMarriageCertificate ? '已選擇的書約' : '已選擇的商品')}</h3>
                      
                      {/* Selected Format */}
                      <div className="flex gap-4 items-center mb-6">
                         <div className="w-14 aspect-[500/647] rounded-md overflow-hidden shrink-0 shadow-sm">
-                           <img src={isWeddingInvitation && selectedVariant ? `https://admin.ministylecards.com${selectedVariant.image}` : productData.image} alt={productData.title} className="w-full h-full object-cover bg-gray-100" />
+                           <img src={(isWeddingInvitation || isMarriageCertificate) && selectedVariant ? `https://admin.ministylecards.com${selectedVariant.image}` : productData.image} alt={productData.title} className="w-full h-full object-cover bg-gray-100" />
                         </div>
                         <div className="flex-1">
                            <h4 className="text-[14px] font-medium text-gray-900 mb-1 tracking-wide">{productData.title}</h4>
-                           {isWeddingInvitation && selectedVariant && <p className="text-[13px] text-gray-500 mb-2">{selectedVariant.name}</p>}
-                           <p className="text-[14px] font-medium font-serif">NT$ {formatPrice(baseUnitPrice)} <span className="text-[11px] font-sans font-normal text-gray-400">/ {isWeddingInvitation ? '份' : (appliedRule && appliedRule.rule_type === 'bundle' ? '組' : '個')}</span></p>
+                           {(isWeddingInvitation || isMarriageCertificate) && selectedVariant && <p className="text-[13px] text-gray-500 mb-2">{selectedVariant.name}</p>}
+                           <p className="text-[14px] font-medium font-serif">NT$ {formatPrice(baseUnitPrice)} <span className="text-[11px] font-sans font-normal text-gray-400">/ {isWeddingInvitation ? '份' : (isMarriageCertificate ? '組' : (appliedRule && appliedRule.rule_type === 'bundle' ? '組' : '個'))}</span></p>
                         </div>
                      </div>
 
@@ -1031,7 +1032,7 @@ export function ProductDetailPage() {
                      {/* Totals */}
                      <div className="space-y-4 text-[13px] text-gray-600 mb-8">
                         <div className="flex justify-between items-start">
-                           <span>{isWeddingInvitation ? '喜帖' : '商品'}小計 <br/><span className="text-[11px] text-gray-400 block mt-0.5">(NT$ {formatPrice(baseUnitPrice)} x {quantity} {isWeddingInvitation ? '份' : '個'})</span></span>
+                           <span>{isWeddingInvitation ? '喜帖' : (isMarriageCertificate ? '書約' : '商品')}小計 <br/><span className="text-[11px] text-gray-400 block mt-0.5">(NT$ {formatPrice(baseUnitPrice)} x {quantity} {isWeddingInvitation ? '份' : (isMarriageCertificate ? '組' : '個')})</span></span>
                            <span className="font-medium text-[15px] text-gray-800">NT$ {formatPrice(formatTotal)}</span>
                         </div>
                         {discountAmount > 0 && (

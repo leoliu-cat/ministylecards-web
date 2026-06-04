@@ -18,25 +18,58 @@ export function IllustrationPage() {
         : [];
       
       const worksCountByCollection: Record<number, number> = {};
+      const firstProductByCollection: Record<number, any> = {};
+
       illustrationProducts.forEach(p => {
         if (p.collection_id) {
            worksCountByCollection[p.collection_id] = (worksCountByCollection[p.collection_id] || 0) + 1;
+           if (!firstProductByCollection[p.collection_id]) {
+               firstProductByCollection[p.collection_id] = p;
+           }
         }
       });
 
-      const activeCollections = Array.isArray(collectionsData) 
-        ? collectionsData.filter(c => worksCountByCollection[c.id] > 0) 
-        : [];
+      const collectionsMap: Record<number, any> = {};
+      if (Array.isArray(collectionsData)) {
+          collectionsData.forEach(c => collectionsMap[c.id] = c);
+      }
       
-      const mappedIllustrators = activeCollections.map(c => ({
-        id: c.id,
-        name: c.title,
-        slug: c.slug,
-        works: worksCountByCollection[c.id],
-        image: c.cover_image 
-          ? `https://admin.ministylecards.com${c.cover_image}` 
-          : 'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=300&q=80'
-      }));
+      const activeCollectionIds = Object.keys(worksCountByCollection).map(Number);
+
+      const mappedIllustrators = activeCollectionIds.map(cid => {
+          const c = collectionsMap[cid];
+          if (c) {
+            return {
+              id: c.id,
+              name: c.title,
+              slug: c.slug,
+              works: worksCountByCollection[cid],
+              image: c.cover_image 
+                ? `https://admin.ministylecards.com${c.cover_image}` 
+                : 'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=300&q=80'
+            };
+          } else {
+             // Fallback to generating a faux collection from the first product
+             const p = firstProductByCollection[cid];
+             let authorName = "特約插畫師";
+             if (p && p.title && p.title.includes("｜")) {
+                const parts = p.title.split("｜");
+                if (parts.length > 1) {
+                   authorName = parts[1].split(" ")[0]; // Extract name after '｜'
+                }
+             }
+
+             return {
+               id: cid,
+               name: authorName, 
+               slug: cid.toString(),
+               works: worksCountByCollection[cid],
+               image: p && p.images && p.images.length > 0 
+                ? `https://admin.ministylecards.com${p.images[0]}` 
+                : 'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=300&q=80'
+             };
+          }
+      });
 
       setIllustrators(mappedIllustrators);
       setLoading(false);

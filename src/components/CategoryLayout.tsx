@@ -32,7 +32,10 @@ export function CategoryLayout({ title, subtitle, breadcrumbs, products, hideCol
     fetch(`${API_BASE_URL}/api/collections`)
       .then(res => res.json())
       .then(data => {
-        setCollections(Array.isArray(data) ? data.slice(0, 5) : data);
+        const filteredCollections = Array.isArray(data) 
+          ? data.filter(c => !c.slug.includes('illustrator') && !c.title.includes('老師'))
+          : [];
+        setCollections(filteredCollections.slice(0, 5));
       })
       .catch(err => console.warn('Could not fetch collections (possibly dev server restart):', err.message));
   }, []);

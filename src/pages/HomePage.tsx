@@ -59,7 +59,12 @@ export function HomePage() {
     fetch(`${API_BASE_URL}/api/collections`)
       .then(res => res.json())
       .then(data => {
-        setApiCollections(data.slice(0, 5));
+        // Filter out illustrator collections so they don't appear in Featured Collections
+        // The user can keep them "Visible" in the admin panel so they show up on the Illustration page.
+        const featuredCollections = Array.isArray(data) 
+          ? data.filter(c => !c.slug.includes('illustrator') && !c.title.includes('老師'))
+          : [];
+        setApiCollections(featuredCollections.slice(0, 5));
       })
       .catch(err => console.warn('Could not fetch collections (possibly dev server restart):', err.message));
   }, []);
