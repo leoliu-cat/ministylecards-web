@@ -850,51 +850,59 @@ export function ProductDetailPage() {
                      return (
                         <div key={group.id} className={`${!isFirst ? 'pt-6' : ''} flex flex-col gap-2`}>
                             {group.input_type === 'select' ? (
-                               <>
-                                   <label className="text-[14px] font-medium text-gray-800 tracking-wide">{group.title}:</label>
-                                   <div className="relative">
-                                      <select 
-                                         value={selectedAddons[group.id] || ''} 
-                                         onChange={e => handleAddonChange(group.id, e.target.value)}
-                                         className="w-full appearance-none border border-gray-300 rounded px-4 py-2.5 text-[14px] text-gray-700 bg-[#faf8f5]/50 focus:border-[#c98f6a] focus:outline-none transition-colors pr-10 cursor-pointer"
-                                      >
-                                         {group.options.map((opt: any, i: number) => (
-                                           <option key={`${opt.name}-${i}`} value={opt.name}>
-                                               {opt.name} {opt.price > 0 && !opt.name.includes(opt.price.toString()) ? `[+$${opt.price}]` : ''}
-                                            </option>
-                                         ))}
-                                      </select>
-                                      <ChevronDown size={16} className="absolute right-4 top-3 text-gray-400 pointer-events-none" />
-                                   </div>
-                                   {/* If option has image, display it */}
-                                   {(() => {
-                                      const selOpt = group.options.find((o: any) => o.name === selectedAddons[group.id]);
-                                      
-                                      return (
-                                         <>
-                                            {group.title === '封蠟章貼紙' && selOpt && selOpt.price > 0 && (
-                                               <div className="mt-3 p-4 bg-[#faf8f5] rounded border border-gray-100 flex flex-col gap-3">
-                                                  <p className="text-[13px] text-gray-700 font-medium tracking-wide">✨ 選擇顏色</p>
-                                                  <div className="flex flex-wrap gap-x-5 gap-y-3">
-                                                     {['霧金', '紅銅金', '古銅金', '咖啡金', '復古金', '珍珠白'].map(color => (
-                                                        <label key={color} className="flex items-center gap-2 cursor-pointer group/seal">
-                                                           <div className={`w-4 h-4 rounded-full border ${waxSealColor === color ? 'border-[#c98f6a] border-[4px]' : 'border-gray-300 group-hover/seal:border-gray-400'} transition-all`}></div>
-                                                           <input type="radio" className="hidden" name="waxSeal" checked={waxSealColor === color} onChange={() => setWaxSealColor(color)} />
-                                                           <span className="text-[13px] text-gray-700">{color}</span>
-                                                        </label>
-                                                     ))}
-                                                  </div>
-                                               </div>
-                                            )}
-                                            {selOpt && selOpt.image && (
-                                               <div className="mt-3 rounded-lg overflow-hidden border border-gray-100 bg-[#faf8f5] flex justify-center">
-                                                  <img loading="lazy" src={`https://admin.ministylecards.com${selOpt.image}`} alt={selOpt.image_alt || selOpt.name} className="max-h-48 w-auto object-contain mix-blend-multiply rounded" />
-                                               </div>
-                                            )}
-                                         </>
-                                      );
-                                   })()}
-                               </>
+                               (() => {
+                                  const selOpt = group.options.find((o: any) => o.name === selectedAddons[group.id]);
+                                  const hasExtraPrice = selOpt && selOpt.price > 0 && !selOpt.name.includes("+0");
+                                  return (
+                                     <>
+                                         <label className="text-[14px] font-medium text-gray-800 tracking-wide">{group.title}:</label>
+                                         <div className="relative">
+                                            <select 
+                                               value={selectedAddons[group.id] || ''} 
+                                               onChange={e => handleAddonChange(group.id, e.target.value)}
+                                               className={`w-full appearance-none border rounded px-4 py-2.5 text-[14px] focus:outline-none transition-colors pr-10 cursor-pointer ${
+                                                 hasExtraPrice 
+                                                   ? 'border-[#c98f6a]/60 bg-[#faf8f5] text-[#b5734c] font-medium focus:border-[#c98f6a] shadow-sm'
+                                                   : 'border-gray-300 bg-[#faf8f5]/50 text-gray-700 focus:border-[#c98f6a]'
+                                               }`}
+                                            >
+                                               {group.options.map((opt: any, i: number) => (
+                                                 <option key={`${opt.name}-${i}`} value={opt.name}>
+                                                     {opt.name} {opt.price > 0 && !opt.name.includes(opt.price.toString()) ? `[+$${opt.price}]` : ''}
+                                                  </option>
+                                               ))}
+                                            </select>
+                                            <ChevronDown size={16} className={`absolute right-4 top-3 pointer-events-none ${hasExtraPrice ? 'text-[#b5734c]' : 'text-gray-400'}`} />
+                                         </div>
+                                         {/* If option has image, display it */}
+                                         {(() => {
+                                            return (
+                                               <>
+                                                  {group.title === '封蠟章貼紙' && selOpt && selOpt.price > 0 && (
+                                                     <div className="mt-3 p-4 bg-[#faf8f5] rounded border border-[#c98f6a]/20 flex flex-col gap-3">
+                                                        <p className="text-[13px] text-gray-700 font-medium tracking-wide">✨ 選擇顏色</p>
+                                                        <div className="flex flex-wrap gap-x-5 gap-y-3">
+                                                           {['霧金', '紅銅金', '古銅金', '咖啡金', '復古金', '珍珠白'].map(color => (
+                                                              <label key={color} className="flex items-center gap-2 cursor-pointer group/seal">
+                                                                 <div className={`w-4 h-4 rounded-full border ${waxSealColor === color ? 'border-[#c98f6a] border-[4px]' : 'border-gray-300 group-hover/seal:border-gray-400'} transition-all`}></div>
+                                                                 <input type="radio" className="hidden" name="waxSeal" checked={waxSealColor === color} onChange={() => setWaxSealColor(color)} />
+                                                                 <span className="text-[13px] text-gray-700">{color}</span>
+                                                              </label>
+                                                           ))}
+                                                        </div>
+                                                     </div>
+                                                  )}
+                                                  {selOpt && selOpt.image && (
+                                                     <div className="mt-3 rounded-lg overflow-hidden border border-gray-100 bg-[#faf8f5] flex justify-center">
+                                                        <img loading="lazy" src={`https://admin.ministylecards.com${selOpt.image}`} alt={selOpt.image_alt || selOpt.name} className="max-h-48 w-auto object-contain mix-blend-multiply rounded" />
+                                                     </div>
+                                                  )}
+                                               </>
+                                            );
+                                         })()}
+                                     </>
+                                  );
+                               })()
                             ) : group.input_type === 'checkbox' ? (
                                <label className="flex items-center gap-3 cursor-pointer group">
                                   <div className="relative flex items-center justify-center">
@@ -907,7 +915,7 @@ export function ProductDetailPage() {
                                      <Check size={14} strokeWidth={3} className="absolute text-white pointer-events-none opacity-0 peer-checked:opacity-100" />
                                   </div>
                                   {group.options[0] && (
-                                     <span className="text-[14px] text-gray-800 tracking-wide group-hover:text-[#c98f6a] transition-colors">
+                                     <span className={`text-[14px] tracking-wide transition-colors ${group.options[0].price > 0 && !!selectedAddons[group.id] ? 'text-[#b5734c] font-medium' : 'text-gray-800 group-hover:text-[#c98f6a]'}`}>
                                         {group.options[0].name}
                                      </span>
                                   )}
