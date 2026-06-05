@@ -30,7 +30,7 @@ export function AboutPage() {
         {/* Hero Section */}
       <section className="relative h-[600px] flex items-center px-4 md:px-20 overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <img 
+          <img loading="lazy" 
             src="https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&w=1600&q=80" 
             alt="Wedding invitation aesthetics" 
             className="w-full h-full object-cover object-right"
@@ -54,7 +54,7 @@ export function AboutPage() {
       <section className="py-24 px-4 md:px-12 max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-16">
         <div className="w-full md:w-1/2">
           <div className="relative">
-            <img 
+            <img loading="lazy" 
               src="https://cdn.ministylecards.com/about/wedding-invitation-brand-story-ministylecards.png" 
               alt="MINIStyleCards 品牌理念｜客製化喜帖與婚禮設計體驗" 
               className="w-full h-auto object-contain scale-110 md:scale-125 hover:scale-105 transition-transform duration-700 ease-in-out"
@@ -89,7 +89,7 @@ export function AboutPage() {
           {whatWeDo.map((item, idx) => (
             <Link to={item.to} key={idx} className="group block">
               <div className="aspect-[4/3] rounded overflow-hidden mb-4 shadow-sm bg-white">
-                <img src={item.img} alt={item.alt} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                <img loading="lazy" src={item.img} alt={item.alt} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
               </div>
               <h3 className="font-serif text-sm mb-1">{item.en}</h3>
               <p className="text-xs text-gray-500 tracking-wider mb-3">{item.tw}</p>
@@ -132,7 +132,7 @@ export function AboutPage() {
       {/* Founder Section */}
       <section className="bg-[#f0ece5] flex flex-col lg:flex-row relative">
         <div className="w-full lg:w-1/2 aspect-[4/3] lg:aspect-auto h-[400px] lg:h-auto">
-          <img 
+          <img loading="lazy" 
             src="https://cdn.ministylecards.com/about/wedding-design-founders-ministylecards.jpg.png" 
             alt="MINIStyleCards 婚禮喜帖與婚禮設計品牌創辦人 Joanne & Leo" 
             className="w-full h-full object-cover object-center"
@@ -164,7 +164,7 @@ export function AboutPage() {
           {journalPosts.map((post, idx) => (
              <Link to={post.to} key={idx} className="group block">
                 <div className="aspect-[3/4] overflow-hidden mb-4 rounded-sm">
-                   <img src={post.img} alt={post.alt} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                   <img loading="lazy" src={post.img} alt={post.alt} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                 </div>
                 <h3 className="text-sm font-medium mb-1">{post.tw}</h3>
                 <p className="font-serif text-[13px] text-gray-500">{post.en}</p>

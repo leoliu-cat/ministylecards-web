@@ -79,8 +79,8 @@ export function ProductDetailPage() {
     setLoading(true);
     
     Promise.all([
-      fetch(`${API_BASE_URL}/api/products`).then(r => r.json()),
-      fetch(`${API_BASE_URL}/api/collections`).then(r => r.json())
+      fetch(`${API_BASE_URL}/api/products?limit=1000`).then(r => r.json()),
+      fetch(`${API_BASE_URL}/api/collections?limit=1000`).then(r => r.json())
     ])
       .then(([productsData, collectionsData]) => {
         const foundParam = productsData.find((p: any) => {
@@ -608,7 +608,7 @@ export function ProductDetailPage() {
                <div className="w-full lg:w-[60%] flex flex-col-reverse sm:flex-row gap-3 xl:gap-4">
                   <div className="flex sm:flex-col gap-2 sm:gap-3 shrink-0 overflow-x-auto sm:w-16 xl:w-20 pb-2 sm:pb-0 hide-scrollbar">
                      {productData.images && productData.images.length > 0 ? productData.images.map((img: string, idx: number) => (
-                        <img 
+                        <img loading="lazy" 
                            key={idx} 
                            src={img} 
                            onClick={() => setSelectedImage(img)}
@@ -617,7 +617,7 @@ export function ProductDetailPage() {
                         />
                      )) : 
                         [1, 2, 3, 4].map(n => (
-                            <img 
+                            <img loading="lazy" 
                                key={n} 
                                src={productData.image} 
                                className={`w-[60px] sm:w-full aspect-[500/647] object-cover rounded cursor-pointer transition-all border shrink-0 ${n === 1 ? 'border-[#c98f6a]' : 'border-transparent hover:border-gray-300 opacity-80 hover:opacity-100'}`} 
@@ -627,7 +627,7 @@ export function ProductDetailPage() {
                      }
                   </div>
                   <div className="flex-1">
-                     <img src={selectedImage || productData.image} className="w-full aspect-[500/647] object-cover rounded-lg shadow-sm" alt={productData.title} />
+                     <img loading="lazy" src={selectedImage || productData.image} className="w-full aspect-[500/647] object-cover rounded-lg shadow-sm" alt={productData.title} />
                   </div>
                </div>
 
@@ -716,7 +716,7 @@ export function ProductDetailPage() {
                         <div className="flex items-center gap-3 h-full">
                            <div className="w-20 lg:w-24 shrink-0 aspect-[4/3] bg-[#faf8f5] rounded-lg overflow-hidden relative">
                               <div className="absolute top-1.5 right-1.5 w-4 h-4 bg-white/80 text-[#c98f6a] rounded-full flex items-center justify-center text-[9px] font-bold z-10 backdrop-blur-sm">{index + 1}</div>
-                              <img src={`https://admin.ministylecards.com${f.image}`} className="w-full h-full object-cover opacity-90" alt={f.image_alt || f.name} />
+                              <img loading="lazy" src={`https://admin.ministylecards.com${f.image}`} className="w-full h-full object-cover opacity-90" alt={f.image_alt || f.name} />
                            </div>
                            <div className="flex flex-col flex-1 py-0.5 h-full justify-between">
                               <div>
@@ -814,9 +814,9 @@ export function ProductDetailPage() {
                                        <div key={colorName} className="flex flex-col items-center gap-2 relative group cursor-pointer">
                                           {envImage ? (
                                              <>
-                                                <img src={`https://admin.ministylecards.com${envImage}`} alt={envColorObj?.image_alt || colorName} className="w-20 h-14 object-cover rounded-sm shadow-sm border border-gray-200" />
+                                                <img loading="lazy" src={`https://admin.ministylecards.com${envImage}`} alt={envColorObj?.image_alt || colorName} className="w-20 h-14 object-cover rounded-sm shadow-sm border border-gray-200" />
                                                 <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-64 z-50 bg-white p-1.5 rounded-xl border border-gray-200 shadow-xl opacity-0 scale-95 pointer-events-none group-hover:opacity-100 group-hover:scale-100 transition-all origin-bottom duration-200">
-                                                   <img src={`https://admin.ministylecards.com${envImage}`} alt={envColorObj?.image_alt || colorName} className="w-full h-auto object-cover rounded-lg" />
+                                                   <img loading="lazy" src={`https://admin.ministylecards.com${envImage}`} alt={envColorObj?.image_alt || colorName} className="w-full h-auto object-cover rounded-lg" />
                                                 </div>
                                              </>
                                           ) : (
@@ -888,7 +888,7 @@ export function ProductDetailPage() {
                                             )}
                                             {selOpt && selOpt.image && (
                                                <div className="mt-3 rounded-lg overflow-hidden border border-gray-100 bg-[#faf8f5] flex justify-center">
-                                                  <img src={`https://admin.ministylecards.com${selOpt.image}`} alt={selOpt.image_alt || selOpt.name} className="max-h-48 w-auto object-contain mix-blend-multiply rounded" />
+                                                  <img loading="lazy" src={`https://admin.ministylecards.com${selOpt.image}`} alt={selOpt.image_alt || selOpt.name} className="max-h-48 w-auto object-contain mix-blend-multiply rounded" />
                                                </div>
                                             )}
                                          </>
@@ -931,7 +931,7 @@ export function ProductDetailPage() {
                      {/* Selected Format */}
                      <div className="flex gap-4 items-center mb-6">
                         <div className="w-14 aspect-[500/647] rounded-md overflow-hidden shrink-0 shadow-sm">
-                           <img src={(isWeddingInvitation || isMarriageCertificate) && selectedVariant ? `https://admin.ministylecards.com${selectedVariant.image}` : productData.image} alt={productData.title} className="w-full h-full object-cover bg-gray-100" />
+                           <img loading="lazy" src={(isWeddingInvitation || isMarriageCertificate) && selectedVariant ? `https://admin.ministylecards.com${selectedVariant.image}` : productData.image} alt={productData.title} className="w-full h-full object-cover bg-gray-100" />
                         </div>
                         <div className="flex-1">
                            <h4 className="text-[14px] font-medium text-gray-900 mb-1 tracking-wide">{productData.title}</h4>

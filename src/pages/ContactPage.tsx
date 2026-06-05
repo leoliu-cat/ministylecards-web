@@ -46,7 +46,7 @@ export function ContactPage() {
       {/* Hero Section */}
       <section className="flex flex-col md:block md:relative md:h-[480px] lg:h-[540px] overflow-hidden bg-[#e4e9ef]">
         <div className="w-full h-[320px] relative md:h-auto md:absolute md:inset-0 md:z-0 md:w-[85%] lg:w-[80%]">
-           <img 
+           <img loading="lazy" 
              src="https://cdn.ministylecards.com/contact/luxury-wedding-stationery-contact.jpg" 
              alt="聯絡 MINIStyleCards 客製化婚禮喜帖與婚禮設計服務" 
              className="absolute inset-0 w-full h-full object-cover object-center md:object-left"
@@ -205,11 +205,11 @@ export function ContactPage() {
          <h2 className="text-3xl font-serif mb-2">Follow us on Instagram</h2>
          <a href="https://www.instagram.com/ministylecards/" target="_blank" rel="noopener noreferrer" className="text-sm text-[#c98f6a] hover:text-[#b47a55] mb-12 inline-block">@ministylecards</a>
          <div className="flex flex-wrap md:flex-nowrap justify-center px-4 max-w-7xl mx-auto mb-12 gap-2 md:gap-4 overflow-hidden">
-            <div className="w-1/2 md:w-1/5 aspect-square"><img src="https://cdn.ministylecards.com/contact/interactive-save-the-date-wedding-invitation.jpg" alt="抽拉式 Save the Date 婚禮喜帖與互動婚禮設計｜MINIStyleCards" className="w-full h-full object-cover rounded" /></div>
-            <div className="w-1/2 md:w-1/5 aspect-square"><img src="https://cdn.ministylecards.com/contact/minimal-black-white-wedding-invitation.jpg" alt="極簡黑白美式婚禮喜帖與現代排版設計｜MINIStyleCards" className="w-full h-full object-cover rounded" /></div>
-            <div className="hidden md:block w-1/5 aspect-square"><img src="https://cdn.ministylecards.com/contact/newspaper-style-wedding-invitation.jpg" alt="報紙風婚禮喜帖與復古編輯感婚禮設計｜MINIStyleCards" className="w-full h-full object-cover rounded" /></div>
-            <div className="hidden md:block w-1/5 aspect-square"><img src="https://cdn.ministylecards.com/contact/photo-wedding-invitation-design.jpg" alt="婚紗照片款婚禮喜帖與浪漫花卉設計｜MINIStyleCards" className="w-full h-full object-cover rounded" /></div>
-            <div className="hidden md:block w-1/5 aspect-square"><img src="https://cdn.ministylecards.com/contact/passport-ticket-wedding-invitation.jpg" alt="機票護照造型婚禮喜帖與旅行主題婚禮設計｜MINIStyleCards" className="w-full h-full object-cover rounded" /></div>
+            <div className="w-1/2 md:w-1/5 aspect-square"><img loading="lazy" src="https://cdn.ministylecards.com/contact/interactive-save-the-date-wedding-invitation.jpg" alt="抽拉式 Save the Date 婚禮喜帖與互動婚禮設計｜MINIStyleCards" className="w-full h-full object-cover rounded" /></div>
+            <div className="w-1/2 md:w-1/5 aspect-square"><img loading="lazy" src="https://cdn.ministylecards.com/contact/minimal-black-white-wedding-invitation.jpg" alt="極簡黑白美式婚禮喜帖與現代排版設計｜MINIStyleCards" className="w-full h-full object-cover rounded" /></div>
+            <div className="hidden md:block w-1/5 aspect-square"><img loading="lazy" src="https://cdn.ministylecards.com/contact/newspaper-style-wedding-invitation.jpg" alt="報紙風婚禮喜帖與復古編輯感婚禮設計｜MINIStyleCards" className="w-full h-full object-cover rounded" /></div>
+            <div className="hidden md:block w-1/5 aspect-square"><img loading="lazy" src="https://cdn.ministylecards.com/contact/photo-wedding-invitation-design.jpg" alt="婚紗照片款婚禮喜帖與浪漫花卉設計｜MINIStyleCards" className="w-full h-full object-cover rounded" /></div>
+            <div className="hidden md:block w-1/5 aspect-square"><img loading="lazy" src="https://cdn.ministylecards.com/contact/passport-ticket-wedding-invitation.jpg" alt="機票護照造型婚禮喜帖與旅行主題婚禮設計｜MINIStyleCards" className="w-full h-full object-cover rounded" /></div>
          </div>
          <a href="https://www.instagram.com/ministylecards/" target="_blank" rel="noopener noreferrer" className="border border-gray-300 bg-white py-3 px-8 text-sm hover:bg-gray-50 transition-colors inline-flex items-center gap-2 mx-auto rounded">
             前往 Instagram <span>→</span>

@@ -13,8 +13,8 @@ export function CollectionDetailPage() {
 
   useEffect(() => {
     Promise.all([
-      fetch(`${API_BASE_URL}/api/collections`).then(r => r.json()),
-      fetch(`${API_BASE_URL}/api/products`).then(r => r.json())
+      fetch(`${API_BASE_URL}/api/collections?limit=1000`).then(r => r.json()),
+      fetch(`${API_BASE_URL}/api/products?limit=1000`).then(r => r.json())
     ]).then(([collectionsData, productsData]) => {
       // Find the collection matching the slug or ID
       let col = Array.isArray(collectionsData) ? collectionsData.find(c => c.slug === collectionId || String(c.id) === collectionId) : null;

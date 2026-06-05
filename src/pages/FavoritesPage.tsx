@@ -29,7 +29,7 @@ export function FavoritesPage() {
       {/* Hero Section */}
       <section className="flex flex-col md:block md:relative md:h-[400px] overflow-hidden bg-[#faf8f5]">
         <div className="w-full h-[280px] relative md:h-auto md:absolute md:inset-0 md:z-0">
-           <img 
+           <img loading="lazy" 
               src="https://cdn.ministylecards.com/favorites/favorites-wedding-invitation-banner.jpg" 
               alt="MINIStyleCards 收藏清單頁面橫幅｜客製婚禮喜帖與似顏繪設計展示" 
               className="absolute inset-0 w-full h-full object-cover object-[25%_center] md:object-center"
@@ -98,7 +98,7 @@ export function FavoritesPage() {
             <div key={item.id} className={`group flex ${viewMode === 'grid' ? 'flex-col' : 'flex-row gap-8 items-center border-b border-gray-100 pb-8'}`}>
               <div className={`relative bg-[#faf8f5] rounded overflow-hidden mb-4 ${viewMode === 'grid' ? 'aspect-square w-full' : 'w-48 h-48 shrink-0'}`}>
                 <Link to={`/product/${item.slug}`}>
-                  <img  
+                  <img loading="lazy"  
                     src={item.image} 
                     alt={item.name} 
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 

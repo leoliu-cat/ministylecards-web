@@ -163,28 +163,28 @@ export function NoticePage() {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 md:gap-6 text-center">
             <div className="flex flex-col items-center">
                <div className="w-24 h-24 rounded-full mb-4 flex items-center justify-center ml-auto mr-auto border border-gray-100 overflow-hidden">
-                 <img src="https://cdn.ministylecards.com/notice/printing-hot-foil-pressure-mark.png" alt="喜帖燙金壓痕示意｜燙金工藝於厚紙材上的正常壓印效果｜MINIStyleCards" className="w-full h-full object-cover" />
+                 <img loading="lazy" src="https://cdn.ministylecards.com/notice/printing-hot-foil-pressure-mark.png" alt="喜帖燙金壓痕示意｜燙金工藝於厚紙材上的正常壓印效果｜MINIStyleCards" className="w-full h-full object-cover" />
                </div>
                <span className="text-[13px] font-medium text-gray-800 tracking-wide">燙金壓痕</span>
             </div>
 
             <div className="flex flex-col items-center">
                <div className="w-24 h-24 rounded-full mb-4 flex items-center justify-center ml-auto mr-auto border border-gray-100 overflow-hidden">
-                 <img src="https://cdn.ministylecards.com/notice/printing-small-dot-tolerance.png" alt="婚禮喜帖印刷正常容許範圍｜1mm內微小墨點與紙材現象說明｜MINIStyleCards" className="w-full h-full object-cover" />
+                 <img loading="lazy" src="https://cdn.ministylecards.com/notice/printing-small-dot-tolerance.png" alt="婚禮喜帖印刷正常容許範圍｜1mm內微小墨點與紙材現象說明｜MINIStyleCards" className="w-full h-full object-cover" />
                </div>
                <span className="text-[13px] font-medium text-gray-800 tracking-wide">直徑1mm(含)以內汙點</span>
             </div>
 
             <div className="flex flex-col items-center">
                <div className="w-24 h-24 rounded-full mb-4 flex items-center justify-center ml-auto mr-auto border border-gray-100 overflow-hidden">
-                 <img src="https://cdn.ministylecards.com/notice/foil-print-texture-variation.png" alt="燙金斑駁與紙材紋理示意｜婚禮喜帖燙金工藝正常效果說明｜MINIStyleCards" className="w-full h-full object-cover" />
+                 <img loading="lazy" src="https://cdn.ministylecards.com/notice/foil-print-texture-variation.png" alt="燙金斑駁與紙材紋理示意｜婚禮喜帖燙金工藝正常效果說明｜MINIStyleCards" className="w-full h-full object-cover" />
                </div>
                <span className="text-[13px] font-medium text-gray-800 tracking-wide">燙金斑駁</span>
             </div>
 
             <div className="flex flex-col items-center">
                <div className="w-24 h-24 rounded-full mb-4 flex items-center justify-center ml-auto mr-auto border border-gray-100 overflow-hidden">
-                 <img src="https://cdn.ministylecards.com/notice/envelope-card-color-difference.png" alt="喜帖信封與卡片色差說明｜信封是紙漿固定顏色卡片是數位印刷只能接近信封顏色但無法完全一致｜MINIStyleCards" className="w-full h-full object-cover" />
+                 <img loading="lazy" src="https://cdn.ministylecards.com/notice/envelope-card-color-difference.png" alt="喜帖信封與卡片色差說明｜信封是紙漿固定顏色卡片是數位印刷只能接近信封顏色但無法完全一致｜MINIStyleCards" className="w-full h-full object-cover" />
                </div>
                <span className="text-[13px] font-medium text-gray-800 tracking-wide">信封&卡片色差</span>
             </div>

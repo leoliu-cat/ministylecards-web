@@ -29,7 +29,7 @@ export function CategoryLayout({ title, subtitle, breadcrumbs, products, hideCol
   const { toggleFavorite, isFavorited } = useFavorites();
 
   React.useEffect(() => {
-    fetch(`${API_BASE_URL}/api/collections`)
+    fetch(`${API_BASE_URL}/api/collections?limit=1000`)
       .then(res => res.json())
       .then(data => {
         const filteredCollections = Array.isArray(data) 
@@ -172,7 +172,7 @@ export function CategoryLayout({ title, subtitle, breadcrumbs, products, hideCol
             return (
             <Link to={`/product/${cleanSlug}`} state={{ category: title, product }} key={product.id} className="group cursor-pointer block">
               <div className="relative overflow-hidden mb-4 rounded-md aspect-[500/647] bg-gray-100">
-                <img 
+                <img loading="lazy" 
                   src={product.image} 
                   alt={product.title}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"

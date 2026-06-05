@@ -10,8 +10,8 @@ export function IllustrationPage() {
 
   useEffect(() => {
     Promise.all([
-      fetch(`${API_BASE_URL}/api/collections`).then(r => r.json()),
-      fetch(`${API_BASE_URL}/api/products`).then(r => r.json())
+      fetch(`${API_BASE_URL}/api/collections?limit=1000`).then(r => r.json()),
+      fetch(`${API_BASE_URL}/api/products?limit=1000`).then(r => r.json())
     ]).then(([collectionsData, productsData]) => {
       // Find illustrator collections based on title or slug
       const illustratorCollections = Array.isArray(collectionsData) 
@@ -88,7 +88,7 @@ export function IllustrationPage() {
             {illustrators.map((artist) => (
               <Link to={`/collections/${artist.slug || artist.id}`} key={artist.id} className="group border border-gray-100 rounded-xl p-6 flex flex-col items-center hover:shadow-[0_10px_40px_rgba(0,0,0,0.04)] hover:-translate-y-1 transition-all block">
                 <div className="w-24 h-24 mb-4 rounded-full overflow-hidden bg-gray-50 flex-shrink-0 border-2 border-transparent group-hover:border-[#EAD9CA] transition-colors">
-                  <img 
+                  <img loading="lazy" 
                     src={artist.image} 
                     alt={artist.name}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"

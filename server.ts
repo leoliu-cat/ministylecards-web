@@ -4,12 +4,50 @@ import { createServer as createViteServer } from "vite";
 import { Resend } from "resend";
 import dotenv from "dotenv";
 import { createProxyMiddleware } from "http-proxy-middleware";
+import compression from "compression";
 
 dotenv.config();
+
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+const apiCache = new Map<string, { data: any; expiresAt: number }>();
+
+async function fetchWithCache(url: string, res: express.Response) {
+  const now = Date.now();
+  const cacheKey = url;
+  const cached = apiCache.get(cacheKey);
+
+  // Return cached data if valid
+  if (cached && cached.expiresAt > now) {
+    return res.json(cached.data);
+  }
+
+  try {
+    const targetUrl = `https://admin.ministylecards.com${url}`;
+    const response = await fetch(targetUrl);
+    
+    if (!response.ok) {
+      throw new Error(`Upstream API error: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    apiCache.set(cacheKey, { data, expiresAt: now + CACHE_TTL });
+    res.json(data);
+  } catch (err) {
+    console.error(`Cache fetch error for ${url}:`, err);
+    // Serve stale cache if available
+    if (cached) {
+      return res.json(cached.data);
+    }
+    res.status(500).json({ error: "Failed to fetch from backend" });
+  }
+}
 
 async function startServer() {
   const app = express();
   const PORT = 3000;
+
+  // App-level compression
+  app.use(compression());
 
   const apiProxy = createProxyMiddleware({
     target: "https://admin.ministylecards.com",
@@ -17,6 +55,12 @@ async function startServer() {
   });
 
   app.use((req, res, next) => {
+    // Intercept cacheable GET endpoints before they hit proxy
+    if (req.method === 'GET' && (req.path === '/api/products' || req.path === '/api/collections' || req.path === '/api/categories')) {
+      // reconstruct url to pass query params exactly (like ?limit=1000)
+      return fetchWithCache(req.originalUrl, res);
+    }
+
     if (req.path.startsWith('/api/') || req.path === '/api') {
       if (req.path === '/api/send-email' || req.path === '/api/pay') {
         return next();

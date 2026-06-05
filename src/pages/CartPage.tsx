@@ -73,7 +73,7 @@ export function CartPage() {
                 </button>
 
                 <div className="w-24 h-32 md:w-28 md:h-36 shrink-0 bg-gray-50 rounded overflow-hidden">
-                  <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                  <img loading="lazy" src={item.image} alt={item.name} className="w-full h-full object-cover" />
                 </div>
                 
                 <div className="flex-1 min-w-0">

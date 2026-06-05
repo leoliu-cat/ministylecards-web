@@ -105,7 +105,7 @@ export function LoginPage() {
     <div className="min-h-screen bg-[#faf8f5] flex">
       {/* Left Column: Image & Overlay */}
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden">
-         <img 
+         <img loading="lazy" 
             src="https://cdn.ministylecards.com/login/login-wedding-invitation-illustration.jpg" 
             alt="MINIStyleCards 客製婚禮喜帖與燙金插畫設計｜登入頁品牌形象圖" 
             className="absolute inset-0 w-full h-full object-cover blur-sm scale-110"
@@ -122,7 +122,7 @@ export function LoginPage() {
             
             {/* Left side of card - Image */}
             <div className="w-full lg:w-5/12 relative hidden md:block shrink-0">
-               <img 
+               <img loading="lazy" 
                   src="https://cdn.ministylecards.com/login/login-wedding-invitation-illustration.jpg" 
                   alt="MINIStyleCards 客製婚禮喜帖與燙金插畫設計｜登入頁品牌形象圖" 
                   className="w-full h-full object-cover"
@@ -161,7 +161,7 @@ export function LoginPage() {
 
                      <div className="space-y-4 mb-8">
                         <button onClick={handleGoogleLogin} className="w-full bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 py-3.5 rounded flex items-center justify-center gap-3 transition-colors shadow-sm">
-                           <img src="https://www.google.com/favicon.ico" alt="Google" className="w-5 h-5" />
+                           <img loading="lazy" src="https://www.google.com/favicon.ico" alt="Google" className="w-5 h-5" />
                            <span className="text-[15px] font-medium tracking-wide">使用 Google 帳號登入</span>
                         </button>
                      </div>

@@ -74,7 +74,7 @@ export function ProcessPage() {
           {styles.map((style, idx) => (
             <div key={idx} className="text-left">
               <div className="bg-white shadow-[0_2px_10px_rgba(0,0,0,0.03)] aspect-[4/5] overflow-hidden mb-4 rounded">
-                <img src={style.image} alt={style.alt} className="w-full h-full object-cover" />
+                <img loading="lazy" src={style.image} alt={style.alt} className="w-full h-full object-cover" />
               </div>
               <h3 className="text-[15px] font-medium tracking-wider mb-2 text-center md:text-left">{style.title}</h3>
               <p className="text-sm text-gray-500 tracking-wider text-center md:text-left">{style.price}</p>
@@ -94,7 +94,7 @@ export function ProcessPage() {
           {illustrations.map((ill, idx) => (
             <div key={idx}>
               <div className="aspect-[4/5] bg-gray-50 rounded mb-6 overflow-hidden shadow-sm">
-                 <img src={ill.image} alt={ill.alt} className="w-full h-full object-cover" />
+                 <img loading="lazy" src={ill.image} alt={ill.alt} className="w-full h-full object-cover" />
               </div>
               <h3 className="font-medium tracking-wider mb-2">{ill.title}</h3>
               <p className="text-xs text-gray-500 mb-2">{ill.author}</p>

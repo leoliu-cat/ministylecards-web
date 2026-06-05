@@ -7,7 +7,7 @@ export function CollectionsPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`${API_BASE_URL}/api/collections`)
+    fetch(`${API_BASE_URL}/api/collections?limit=1000`)
       .then(res => res.json())
       .then(data => {
         setCollections(data);
@@ -47,7 +47,7 @@ export function CollectionsPage() {
                 className={`group relative rounded-xl overflow-hidden block ${className}`}
               >
                 <div className="absolute inset-0 bg-gray-100">
-                  <img 
+                  <img loading="lazy" 
                     src={image} 
                     alt={collection.cover_image_alt || collection.title} 
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"

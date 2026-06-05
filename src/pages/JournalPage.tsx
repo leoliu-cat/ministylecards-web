@@ -113,7 +113,7 @@ export function JournalPage() {
               </p>
             </div>
             <div className="w-full md:w-7/12 aspect-[4/3] md:aspect-auto">
-              <img 
+              <img loading="lazy" 
                 src="https://cdn.ministylecards.com/hero/wedding-invitation-design-journal-ministylecards.jpg" 
                 alt="婚禮戒指與喜帖設計靈感情境照｜MINIStyleCards Journal" 
                 className="w-full h-full object-cover"
@@ -158,7 +158,7 @@ export function JournalPage() {
             {sortedArticles.map((article: any) => (
               <Link to={`/journal/${article.slug || article.id}`} key={article.id} className="group block">
                 <div className="aspect-[4/3] overflow-hidden rounded mb-4">
-                  <img 
+                  <img loading="lazy" 
                     src={article.image} 
                     alt={article.title} 
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
@@ -205,7 +205,7 @@ export function JournalPage() {
               {popularArticlesList.map((article: any, idx: number) => (
                 <Link to={`/journal/${article.slug || article.id}`} key={idx} className="flex gap-4 group">
                   <div className="w-20 h-20 shrink-0 overflow-hidden rounded">
-                    <img 
+                    <img loading="lazy" 
                       src={article.image} 
                       alt={article.title} 
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 

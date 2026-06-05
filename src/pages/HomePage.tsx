@@ -56,7 +56,7 @@ export function HomePage() {
   const [apiCollections, setApiCollections] = useState<any[]>([]);
 
   useEffect(() => {
-    fetch(`${API_BASE_URL}/api/collections`)
+    fetch(`${API_BASE_URL}/api/collections?limit=1000`)
       .then(res => res.json())
       .then(data => {
         // Filter out illustrator collections so they don't appear in Featured Collections
@@ -143,7 +143,7 @@ export function HomePage() {
         <div className="collectionGrid">
           {displayCollections.map((item) => (
             <Link to={item.href} className={`collectionCard ${item.className || ''}`} key={item.title}>
-              <img src={item.image} alt={item.alt} />
+              <img loading="lazy" src={item.image} alt={item.alt} />
               <div className="collectionInfo">
                 <h3>{item.title}</h3>
                 <p>{item.subtitle}</p>

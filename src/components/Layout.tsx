@@ -26,7 +26,7 @@ export function Layout() {
   const cartCount = cartItems.length;
 
   useEffect(() => {
-    fetch(`${API_BASE_URL}/api/categories`)
+    fetch(`${API_BASE_URL}/api/categories?limit=1000`)
       .then(r => r.json())
       .then(data => {
         setCategories(data);
@@ -44,7 +44,7 @@ export function Layout() {
     }
     const timer = setTimeout(() => {
       setIsSearching(true);
-      fetch(`${API_BASE_URL}/api/products`)
+      fetch(`${API_BASE_URL}/api/products?limit=1000`)
         .then(res => res.json())
         .then(data => {
           const results = data.filter((item: any) => 
@@ -103,7 +103,7 @@ export function Layout() {
           {user ? (
             <div className="relative group flex items-center justify-center cursor-pointer">
               {(user as any).photoURL ? (
-                <img src={(user as any).photoURL} alt={(user as any).displayName || "使用者"} className="w-6 h-6 rounded-full object-cover" />
+                <img loading="lazy" src={(user as any).photoURL} alt={(user as any).displayName || "使用者"} className="w-6 h-6 rounded-full object-cover" />
               ) : (
                 <div className="w-6 h-6 rounded-full bg-[#f4eee8] text-[#7a6052] flex items-center justify-center text-xs font-bold uppercase">{user.email?.charAt(0)}</div>
               )}
@@ -183,7 +183,7 @@ export function Layout() {
                       }}
                     >
                       <div className="w-20 h-20 bg-gray-200 rounded shrink-0 overflow-hidden">
-                        <img 
+                        <img loading="lazy" 
                           src={result.images && result.images.length > 0 ? `https://admin.ministylecards.com${result.images[0]}` : 'https://images.unsplash.com/photo-1544534728-662d55e09062?auto=format&fit=crop&w=300&q=80'} 
                           alt={result.title} 
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform" 

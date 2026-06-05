@@ -8,7 +8,7 @@ export function NewArrivalPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`${API_BASE_URL}/api/products`)
+    fetch(`${API_BASE_URL}/api/products?limit=1000`)
       .then(res => res.json())
       .then(data => {
         // Sort by created_at or id descending

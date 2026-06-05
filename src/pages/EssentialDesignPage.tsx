@@ -12,8 +12,8 @@ export function EssentialDesignPage() {
 
   useEffect(() => {
     Promise.all([
-      fetch(`${API_BASE_URL}/api/collections`).then(r => r.json()),
-      fetch(`${API_BASE_URL}/api/products`).then(r => r.json())
+      fetch(`${API_BASE_URL}/api/collections?limit=1000`).then(r => r.json()),
+      fetch(`${API_BASE_URL}/api/products?limit=1000`).then(r => r.json())
     ])
     .then(([collectionsData, productsData]) => {
       const essentialProducts = Array.isArray(productsData)
@@ -102,7 +102,7 @@ export function EssentialDesignPage() {
                return (
                  <Link to={linkUrl} state={!isCollection ? { category: '必備設計', product: item } : {}} key={`${item.type}-${item.id}-${idx}`} className="group cursor-pointer block flex flex-col h-full">
                    <div className="relative overflow-hidden mb-5 rounded-md aspect-[4/5] bg-gray-100 flex-shrink-0">
-                     <img 
+                     <img loading="lazy" 
                        src={item.image} 
                        alt={item.title}
                        className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"

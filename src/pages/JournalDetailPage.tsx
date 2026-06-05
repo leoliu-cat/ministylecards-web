@@ -84,7 +84,7 @@ export function JournalDetailPage() {
 
           {article.feature_image && (
             <div className="mb-12 aspect-[16/9] w-full rounded-lg overflow-hidden bg-gray-100">
-              <img 
+              <img loading="lazy" 
                 src={`https://admin.ministylecards.com${article.feature_image}`} 
                 alt={article.title} 
                 className="w-full h-full object-cover"
