@@ -960,7 +960,7 @@ export function ProductDetailPage() {
                         </div>
                      </div>
 
-                     {isWeddingInvitation && (
+                     {addOnDisplayGroups.length > 0 && (
                         <>
                            {/* Selected Add-ons */}
                            <div className="mb-4 flex justify-between items-end">
@@ -1033,6 +1033,14 @@ export function ProductDetailPage() {
                                       })}
                                  </div>
                               )}
+                              
+                              {addOnDisplayGroups.some(g => 
+                                (g.title.includes('插畫') || g.title.includes('似顏繪'))
+                              ) && (
+                                 <div className="mt-4 p-3 bg-[#faf8f5]/80 border border-[#c98f6a]/20 rounded text-[12px] text-[#8b4e36] leading-relaxed shadow-sm">
+                                   * 此款預設含插畫設計，如需更換插畫風格可另行加購，亦可改用婚紗照製作。
+                                 </div>
+                              )}
                            </div>
                         </>
                      )}
@@ -1055,7 +1063,7 @@ export function ProductDetailPage() {
                               <span className="font-medium text-[15px] text-gray-800">NT$ {formatPrice(setupFee)}</span>
                            </div>
                         )}
-                        {isWeddingInvitation && (
+                        {addOnDisplayGroups.length > 0 && (
                            <div className="flex justify-between items-center border-b border-gray-100 pb-6">
                               <span>加購小計</span>
                               <span className="font-medium text-[15px] text-gray-800">NT$ {formatPrice(addonTotal)}</span>

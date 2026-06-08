@@ -29,25 +29,31 @@ export function EssentialDesignPage() {
       const addedCollections = new Set();
 
       essentialProducts.forEach(p => {
-         if (p.collection_id) {
+         const col = p.collection_id ? collectionsMap.get(p.collection_id) : null;
+
+         if (p.collection_id && (!col || col)) {
             if (!addedCollections.has(p.collection_id)) {
                addedCollections.add(p.collection_id);
-               const col = collectionsMap.get(p.collection_id);
-               if (col) {
-                  displayItems.push({
-                     type: 'collection',
-                     id: col.id,
-                     title: col.title,
-                     slug: col.slug,
-                     image: col.cover_image 
-                        ? `https://admin.ministylecards.com${col.cover_image}`
-                        : 'https://images.unsplash.com/photo-1544534728-662d55e09062?auto=format&fit=crop&w=600&q=80',
-                     priceDisplay: '查看所有款式'
-                  });
+               
+               let fauxTitle = col ? col.title : "系列商品";
+               if (!col) {
+                  if (p.title.includes('禮金簿')) fauxTitle = '禮金簿系列';
+                  else if (p.title.includes('簽名軸')) fauxTitle = '簽名軸系列';
                }
+
+               displayItems.push({
+                  type: 'collection',
+                  id: p.collection_id,
+                  title: fauxTitle,
+                  slug: col ? col.slug : String(p.collection_id),
+                  image: col && col.cover_image 
+                     ? `https://admin.ministylecards.com${col.cover_image}`
+                     : (p.images && p.images.length > 0 ? `https://admin.ministylecards.com${p.images[0]}` : 'https://images.unsplash.com/photo-1544534728-662d55e09062?auto=format&fit=crop&w=600&q=80'),
+                  priceDisplay: '查看所有款式'
+               });
             }
          } else {
-            // Standalone product
+            // Standalone product or collection not found
             displayItems.push({
                type: 'product',
                id: p.id,
@@ -57,7 +63,7 @@ export function EssentialDesignPage() {
                image: p.images && p.images.length > 0
                   ? `https://admin.ministylecards.com${p.images[0]}`
                   : 'https://images.unsplash.com/photo-1544534728-662d55e09062?auto=format&fit=crop&w=600&q=80',
-               priceDisplay: `NT$ ${p.base_price}`
+               priceDisplay: `NT$ ${p.base_price} 起`
             });
          }
       });
