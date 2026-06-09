@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { 
   Heart, ChevronRight, Check, Package, Clock, MapPin, 
   ShieldCheck, HeartHandshake, X, Minus, Plus, 
-  LayoutTemplate, Mail, Sparkles, Stamp, ShoppingCart, ChevronDown, Phone, Calendar
+  LayoutTemplate, Mail, Sparkles, Stamp, ShoppingCart, ChevronDown, Phone, Calendar, Instagram
 } from 'lucide-react';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useCart } from '../components/CartContext';
@@ -671,20 +671,15 @@ export function ProductDetailPage() {
                      <div className="flex items-center gap-2"><MapPin size={16} className="text-[#c98f6a] stroke-[1.5]" /> 台灣印製</div>
                   </div>
 
-                  {isWeddingInvitation && parsedInclusions.length > 0 && (
-                     <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm">
-                        <p className="text-[14px] font-medium tracking-widest mb-6 text-center text-gray-800">所有套餐皆包含以下內容</p>
+                  {parsedInclusions.length > 0 && (
+                     <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm mt-8">
+                        <p className="text-[14px] font-medium tracking-widest mb-6 text-center text-gray-800">商品規格包含</p>
                         <div className="flex justify-between items-start text-center gap-2 px-2 flex-wrap">
                            {parsedInclusions.map((name, idx) => {
-                              let Icon = Check;
-                              if (name.includes('排版')) Icon = LayoutTemplate;
-                              else if (name.includes('燙金') && name.includes('信封')) Icon = Sparkles;
-                              else if (name.includes('信封')) Icon = Mail;
-                              else if (name.includes('貼紙')) Icon = Stamp;
                               return (
-                                 <div key={idx} className="flex flex-col items-center min-w-[70px] flex-1 mb-4">
-                                    <div className="w-12 h-12 bg-[#faf8f5] rounded-full flex items-center justify-center mb-3 text-[#c98f6a] border border-[#f0ece5]">
-                                       <Icon size={20} strokeWidth={1.5} />
+                                 <div key={idx} className="flex flex-col items-center justify-start min-w-[70px] flex-1 mb-4">
+                                    <div className="w-10 h-10 bg-[#faf8f5] rounded-full flex items-center justify-center mb-3 text-[#c98f6a] border border-[#f0ece5] text-[15px] font-serif font-medium">
+                                       {idx + 1}
                                     </div>
                                     <p className="text-[12px] text-gray-600 whitespace-pre-line tracking-wide leading-relaxed">{name.replace('排版設計', '\n排版設計')}</p>
                                  </div>
@@ -1079,8 +1074,19 @@ export function ProductDetailPage() {
                         <button onClick={handleAddToCart} className="w-full bg-[#3d342e] hover:bg-[#2b2520] text-white py-4 rounded-lg flex items-center justify-center gap-2 tracking-widest text-[14px] transition-all shadow-sm hover:shadow">
                            <ShoppingCart size={16} /> {editItemId ? '更新客製內容' : '加入購物車'}
                         </button>
-                        <button className="w-full border border-gray-200 text-gray-600 hover:bg-[#faf8f5] hover:border-gray-300 py-3.5 rounded-lg flex items-center justify-center gap-2 tracking-widest text-[14px] transition-all">
-                           <Heart size={16} /> 加入我的收藏
+                        <button 
+                           onClick={() => toggleFavorite({id: productData.id, slug: productId || productData.id.toString(), name: productData.title, price: baseUnitPrice, image: productData.image})}
+                           className="w-full border border-gray-200 text-gray-600 hover:bg-[#faf8f5] hover:border-gray-300 py-3.5 rounded-lg flex items-center justify-center gap-2 tracking-widest text-[14px] transition-all">
+                           <Heart size={16} fill={isFavorited(productData.id) ? "#a43725" : "none"} className={isFavorited(productData.id) ? "text-[#a43725]" : ""} /> {isFavorited(productData.id) ? '已加入收藏' : '加入我的收藏'}
+                        </button>
+                        <button 
+                           onClick={() => {
+                              navigator.clipboard.writeText(window.location.href);
+                              window.open('https://www.instagram.com/ministylecards/', '_blank');
+                              alert('已複製商品連結！將為您開啟 IG，請直接貼上連結與我們聯繫。');
+                           }}
+                           className="w-full border border-[#c98f6a]/30 text-[#8b4e36] bg-[#faf8f5]/50 hover:bg-[#faf8f5] hover:border-[#c98f6a]/50 py-3.5 rounded-lg flex items-center justify-center gap-2 tracking-widest text-[14px] transition-all">
+                           <Instagram size={16} /> IG諮詢
                         </button>
                      </div>
                   </div>
