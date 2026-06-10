@@ -7,6 +7,28 @@ import { useNavigate, Navigate } from 'react-router-dom';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 
+const TapPayFields = React.memo(() => (
+  <div className="pt-6 border-t border-gray-100">
+     <h3 className="text-xl font-medium tracking-widest mb-6">信用卡付款資訊</h3>
+     <div className="space-y-4">
+        <div className="space-y-2">
+           <label className="text-sm text-gray-700 font-medium block">信用卡號 <span className="text-red-500">*</span></label>
+           <div className="w-full border border-gray-300 rounded px-3 py-2 bg-white h-[46px] block" id="card-number"></div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+           <div className="space-y-2">
+              <label className="text-sm text-gray-700 font-medium block">到期日 <span className="text-red-500">*</span></label>
+              <div className="w-full border border-gray-300 rounded px-3 py-2 bg-white h-[46px] block" id="card-expiration-date"></div>
+           </div>
+           <div className="space-y-2">
+              <label className="text-sm text-gray-700 font-medium block">安全碼 (CVV) <span className="text-red-500">*</span></label>
+              <div className="w-full border border-gray-300 rounded px-3 py-2 bg-white h-[46px] block" id="card-ccv"></div>
+           </div>
+        </div>
+     </div>
+  </div>
+));
+
 export function CheckoutPage() {
   const { cartItems, clearCart } = useCart();
   const { user, loading } = useAuth();
@@ -365,27 +387,7 @@ export function CheckoutPage() {
                      <textarea name="notes" value={formData.notes} onChange={handleInputChange} rows={3} className="w-full border border-gray-300 rounded px-4 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-[#c98f6a] focus:border-[#c98f6a]" placeholder="有任何想告訴我們的訊息，例如特殊排版需求... 也可以請留下IG/FB帳號方便即時聯絡討論喔" />
                   </div>
                   
-                  {React.useMemo(() => (
-                  <div className="pt-6 border-t border-gray-100">
-                     <h3 className="text-xl font-medium tracking-widest mb-6">信用卡付款資訊</h3>
-                     <div className="space-y-4">
-                        <div className="space-y-2">
-                           <label className="text-sm text-gray-700 font-medium block">信用卡號 <span className="text-red-500">*</span></label>
-                           <div className="w-full border border-gray-300 rounded px-3 py-2 bg-white h-[46px] block" id="card-number"></div>
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                           <div className="space-y-2">
-                              <label className="text-sm text-gray-700 font-medium block">到期日 <span className="text-red-500">*</span></label>
-                              <div className="w-full border border-gray-300 rounded px-3 py-2 bg-white h-[46px] block" id="card-expiration-date"></div>
-                           </div>
-                           <div className="space-y-2">
-                              <label className="text-sm text-gray-700 font-medium block">安全碼 (CVV) <span className="text-red-500">*</span></label>
-                              <div className="w-full border border-gray-300 rounded px-3 py-2 bg-white h-[46px] block" id="card-ccv"></div>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-                  ), [])}
+                  <TapPayFields />
 
                   {paymentError && (
                      <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
