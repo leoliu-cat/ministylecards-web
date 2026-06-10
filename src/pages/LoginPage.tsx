@@ -14,12 +14,12 @@ export function LoginPage() {
   const [emailSent, setEmailSent] = useState(false);
   const [otpCode, setOtpCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { user, loginWithEmailOtp } = useAuth();
+  const { user, loginWithEmailOtp, setAuthToken } = useAuth();
   
   const from = location.state?.from || '/';
 
   useEffect(() => {
-     if (user && localStorage.getItem('website_token')) {
+     if (user) {
         navigate(from, { replace: true });
      }
   }, [user, navigate, from]);
@@ -46,7 +46,7 @@ export function LoginPage() {
       
       const t = data?.token || data?.access_token || data?.website_token || data?.data?.token || data?.data?.access_token || data?.data?.website_token;
       if (t) {
-          localStorage.setItem('website_token', t);
+          setAuthToken(t);
       }
       
       navigate(from, { replace: true });
@@ -112,7 +112,7 @@ export function LoginPage() {
 
          const t = data.token || data.access_token || data.data?.token || data.data?.access_token;
          if (t) {
-             localStorage.setItem('website_token', t);
+             setAuthToken(t);
          }
 
          loginWithEmailOtp(inputValue);

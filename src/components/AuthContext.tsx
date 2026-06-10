@@ -6,19 +6,22 @@ interface AuthContextType {
   user: User | { email: string, uid?: string } | null;
   loading: boolean;
   loginWithEmailOtp: (email: string) => void;
+  setAuthToken: (token: string) => void;
   logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType>({ 
   user: null, 
   loading: true, 
-  loginWithEmailOtp: () => {}, 
+  loginWithEmailOtp: () => {},
+  setAuthToken: () => {},
   logout: () => {} 
 });
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [firebaseUser, setFirebaseUser] = useState<User | null>(null);
   const [customUser, setCustomUser] = useState<{ email: string, uid?: string } | null>(null);
+  const [sessionToken, setSessionToken] = useState<string | null>(localStorage.getItem('website_token'));
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -29,25 +32,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      // Only consider Firebase user logged in if they also have a website token
-      if (user && localStorage.getItem('website_token')) {
-        setFirebaseUser(user);
-      } else {
-        setFirebaseUser(null);
-      }
+      // We will store the firebase user regardless, but only EXPOSE it later if sessionToken is present
+      setFirebaseUser(user);
       setLoading(false);
     });
     return () => unsubscribe();
   }, []);
 
+  const setAuthToken = (token: string) => {
+    localStorage.setItem('website_token', token);
+    setSessionToken(token);
+    if (auth.currentUser) {
+      setFirebaseUser(auth.currentUser);
+    }
+  };
+
   const loginWithEmailOtp = (email: string) => {
     localStorage.setItem('custom_auth_email', email);
     setCustomUser({ email, uid: 'custom-' + email });
+    setSessionToken(localStorage.getItem('website_token'));
   };
 
   const logout = async () => {
     localStorage.removeItem('custom_auth_email');
     localStorage.removeItem('website_token');
+    setSessionToken(null);
     setCustomUser(null);
     setFirebaseUser(null);
     if (firebaseUser || auth.currentUser) {
@@ -60,12 +69,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   // Only consider active if they have the token
-  const hasWebsiteToken = !!localStorage.getItem('website_token');
+  const hasWebsiteToken = !!sessionToken;
   const activeUser = hasWebsiteToken ? (customUser || firebaseUser) : null;
 
-
   return (
-    <AuthContext.Provider value={{ user: activeUser, loading, loginWithEmailOtp, logout }}>
+    <AuthContext.Provider value={{ user: activeUser, loading, loginWithEmailOtp, setAuthToken, logout }}>
       {children}
     </AuthContext.Provider>
   );

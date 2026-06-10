@@ -80,8 +80,8 @@ export function CheckoutPage() {
   };
 
   useEffect(() => {
-    // Check if TPDirect is loaded
-    if (typeof (window as any).TPDirect !== 'undefined' && !isTapPaySetup.current) {
+    // Check if TPDirect is loaded and elements are in DOM
+    if (typeof (window as any).TPDirect !== 'undefined' && !isTapPaySetup.current && document.getElementById('card-number')) {
       isTapPaySetup.current = true;
       const TPDirect = (window as any).TPDirect;
       
@@ -143,7 +143,7 @@ export function CheckoutPage() {
         }
       });
     }
-  }, []);
+  }, [loading, user, cartItems.length]);
 
   if (loading) {
      return <div className="min-h-screen pt-32 pb-20 text-center">Loading...</div>;
@@ -204,10 +204,10 @@ export function CheckoutPage() {
 
     TPDirect.card.getPrime(async (result: any) => {
       if (result.status !== 0) {
-        if (result.msg?.includes('App name mismatch')) {
-            setPaymentError(`TapPay 授權失敗：App name mismatch。\n\n原因：TapPay 系統限制只能從註冊之網域發起交易請求。\n\n解法：請前往 TapPay 管理後台 (Portal)，將目前的測試網域（例如：${window.location.hostname}）加入應用程式的「網站網址 (Website URLs)」白名單中。`);
+        if (result.msg?.includes('App name mismatch') || result.status === 10000 || result.msg?.includes('failed to get prime')) {
+            setPaymentError(`TapPay 授權失敗 (${result.status}: ${result.msg})。\n\n原因可能是：\n1. 尚未填寫完整信用卡資訊\n2. 測試網域（例如：${window.location.hostname}）未加入 TapPay 後台白名單。\n\n解法：請前往 TapPay 管理後台 (Portal)，將「網站網址 (Website URLs)」加入白名單。`);
         } else {
-            setPaymentError('取得交易授權碼失敗: ' + result.msg);
+            setPaymentError(`取得交易授權碼失敗 (${result.status}): ` + result.msg);
         }
         setIsSubmitting(false);
         return;
