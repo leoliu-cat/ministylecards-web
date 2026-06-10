@@ -15,14 +15,17 @@ export function CollectionDetailPage() {
     Promise.all([
       fetch(`${API_BASE_URL}/api/collections?limit=1000`).then(r => r.json()),
       fetch(`${API_BASE_URL}/api/products?limit=1000`).then(r => r.json())
-    ]).then(([collectionsData, productsData]) => {
+    ]).then(([collectionsResponse, productsResponse]) => {
+      const collectionsData = Array.isArray(collectionsResponse) ? collectionsResponse : collectionsResponse?.docs || [];
+      const productsData = Array.isArray(productsResponse) ? productsResponse : productsResponse?.docs || [];
+
       // Find the collection matching the slug or ID
-      let col = Array.isArray(collectionsData) ? collectionsData.find(c => c.slug === collectionId || String(c.id) === collectionId) : null;
+      let col = collectionsData.find((c: any) => c.slug === collectionId || String(c.id) === collectionId);
       
-      let colProducts = [];
+      let colProducts: any[] = [];
       if (!col) {
          // Create a faux collection from products
-         const fauxProducts = Array.isArray(productsData) ? productsData.filter(p => String(p.collection_id) === collectionId) : [];
+         const fauxProducts = productsData.filter((p: any) => String(p.collection_id) === collectionId);
          if (fauxProducts.length > 0) {
             colProducts = fauxProducts;
             const p = fauxProducts[0];
@@ -41,7 +44,7 @@ export function CollectionDetailPage() {
             };
          }
       } else {
-         colProducts = Array.isArray(productsData) ? productsData.filter(p => p.collection_id === col.id) : [];
+         colProducts = productsData.filter((p: any) => p.collection_id === col.id);
       }
 
       if (col) {

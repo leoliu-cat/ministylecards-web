@@ -15,15 +15,14 @@ export function EssentialDesignPage() {
       fetch(`${API_BASE_URL}/api/collections?limit=1000`).then(r => r.json()),
       fetch(`${API_BASE_URL}/api/products?limit=1000`).then(r => r.json())
     ])
-    .then(([collectionsData, productsData]) => {
-      const essentialProducts = Array.isArray(productsData)
-        ? productsData.filter((p: any) => p.category_id === 4)
-        : [];
+    .then(([collectionsResponse, productsResponse]) => {
+      const collectionsData = Array.isArray(collectionsResponse) ? collectionsResponse : collectionsResponse?.docs || [];
+      const productsData = Array.isArray(productsResponse) ? productsResponse : productsResponse?.docs || [];
+      
+      const essentialProducts = productsData.filter((p: any) => p.category_id === 4);
       
       const collectionsMap = new Map();
-      if (Array.isArray(collectionsData)) {
-         collectionsData.forEach(c => collectionsMap.set(c.id, c));
-      }
+      collectionsData.forEach((c: any) => collectionsMap.set(c.id, c));
 
       const displayItems: any[] = [];
       const addedCollections = new Set();

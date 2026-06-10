@@ -10,7 +10,8 @@ export function MarriageCertificatePage() {
     fetch(`${API_BASE_URL}/api/products?limit=1000`)
       .then(res => res.json())
       .then(data => {
-        const formattedProducts = data
+        const productsData = Array.isArray(data) ? data : data?.docs || [];
+        const formattedProducts = productsData
           .filter((item: any) => item.category_id === 2)
           .map((item: any) => ({
             id: item.id,

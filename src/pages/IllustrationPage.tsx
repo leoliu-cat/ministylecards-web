@@ -12,31 +12,47 @@ export function IllustrationPage() {
     Promise.all([
       fetch(`${API_BASE_URL}/api/collections?limit=1000`).then(r => r.json()),
       fetch(`${API_BASE_URL}/api/products?limit=1000`).then(r => r.json())
-    ]).then(([collectionsData, productsData]) => {
-      // Find illustrator collections based on title or slug
-      const illustratorCollections = Array.isArray(collectionsData) 
-        ? collectionsData.filter(c => c.slug.includes('illustrator') || c.title.includes('老師') || c.title.includes('插畫師') || c.title.includes('插畫繪製'))
-        : [];
+    ]).then(([collectionsResponse, productsResponse]) => {
+      const productsData = Array.isArray(productsResponse) ? productsResponse : productsResponse?.docs || [];
+
+      // Find illustrator products (category_id 5) and group by illustrator name
+      const illustrationProducts = productsData.filter((p: any) => p.category_id === 5);
       
-      const mappedIllustrators = illustratorCollections.map(c => {
-         // Find products associated with this collection
-         const worksCount = Array.isArray(productsData) ? productsData.filter(p => p.collection_id === c.id).length : 0;
+      const illustratorMap = new Map();
+
+      illustrationProducts.forEach((p: any) => {
+         let authorName = p.title;
          
-         let authorName = c.title;
-         if (c.title && c.title.includes("｜")) {
-            authorName = c.title.split("｜")[0].trim(); // Extract name before '｜'
+         // Extract the part containing "老師" if available, else first part
+         if (p.title && p.title.includes("｜")) {
+            const parts = p.title.split("｜");
+            const teacherPart = parts.find((part: string) => part.includes("老師"));
+            if (teacherPart) {
+               authorName = teacherPart.trim();
+            } else {
+               authorName = parts[0].trim();
+            }
          }
 
-         return {
-            id: c.id,
-            name: authorName,
-            slug: c.slug,
-            works: worksCount,
-            image: c.cover_image 
-                ? `https://admin.ministylecards.com${c.cover_image}` 
-                : 'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=300&q=80'
-         };
+         if (!illustratorMap.has(authorName)) {
+            illustratorMap.set(authorName, {
+               id: p.id, // Using product ID as unique key for the artist
+               name: authorName,
+               slug: p.slug,
+               works: 1,
+               firstProductId: p.slug || p.id,
+               image: p.images && p.images.length > 0 
+                  ? `https://admin.ministylecards.com${p.images[0]}` 
+                  : 'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=300&q=80'
+            });
+         } else {
+            const current = illustratorMap.get(authorName);
+            current.works += 1;
+            // Optionally, we could collect all product IDs for this author if we want to build a faux collection
+         }
       });
+
+      const mappedIllustrators = Array.from(illustratorMap.values());
 
       setIllustrators(mappedIllustrators);
       setLoading(false);
@@ -86,7 +102,7 @@ export function IllustrationPage() {
         ) : illustrators.length > 0 ? (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
             {illustrators.map((artist) => (
-              <Link to={`/collections/${artist.slug || artist.id}`} key={artist.id} className="group border border-gray-100 rounded-xl p-6 flex flex-col items-center hover:shadow-[0_10px_40px_rgba(0,0,0,0.04)] hover:-translate-y-1 transition-all block">
+              <Link to={artist.firstProductId ? `/product/${artist.firstProductId}` : `/collections/${artist.slug || artist.id}`} key={artist.id} className="group border border-gray-100 rounded-xl p-6 flex flex-col items-center hover:shadow-[0_10px_40px_rgba(0,0,0,0.04)] hover:-translate-y-1 transition-all block">
                 <div className="w-24 h-24 mb-4 rounded-full overflow-hidden bg-gray-50 flex-shrink-0 border-2 border-transparent group-hover:border-[#EAD9CA] transition-colors">
                   <img loading="lazy" 
                     src={artist.image} 

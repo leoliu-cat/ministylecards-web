@@ -15,7 +15,7 @@ export function WeddingWebsitePage() {
         </p>
         <Link 
           to="/" 
-          className="inline-block bg-[#8b4e36] text-white px-8 py-3 rounded text-sm font-medium hover:bg-[#7a422d] transition-colors"
+          className="inline-block bg-[#3d342e] hover:bg-[#2b2520] text-white px-10 py-3.5 rounded-lg text-[13px] tracking-widest transition-all shadow-sm hover:shadow"
         >
           返回首頁
         </Link>

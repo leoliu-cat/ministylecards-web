@@ -66,6 +66,7 @@ export function ProductDetailPage() {
   const isMarriageCertificate = category.includes('書約');
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [addonGroups, setAddonGroups] = useState<any[]>([]);
   const [pricingRules, setPricingRules] = useState<any[]>([]);
   const [collection, setCollection] = useState<any>(null);
@@ -91,13 +92,22 @@ export function ProductDetailPage() {
         });
         const found = foundParam || (initialProductData.id && initialProductData.id !== productId ? productsData.find((p: any) => p.id == initialProductData.id) : productsData[0]) || productsData[0];
         if (found) {
+            let mergedImages = found.images ? found.images.map((img: string) => `https://admin.ministylecards.com${img}`) : [];
+            // If category is "插畫繪製" (5), merge images from all products in the same collection (unless it's the generic collection #4)
+            if (found.category_id === 5 && found.collection_id && found.collection_id !== 4) {
+                const siblingProducts = productsData.filter((p: any) => p.collection_id === found.collection_id && p.category_id === 5);
+                const allRawImages = siblingProducts.flatMap((p: any) => p.images || []);
+                const prefixedImages = allRawImages.map((img: string) => `https://admin.ministylecards.com${img}`);
+                mergedImages = [...new Set(prefixedImages)] as string[];
+            }
+            
             setProductData({
                 ...found,
                 id: found.id,
                 title: found.title,
                 price: found.base_price,
                 image: found.images && found.images.length > 0 ? `https://admin.ministylecards.com${found.images[0]}` : initialProductData.image,
-                images: found.images ? found.images.map((img: string) => `https://admin.ministylecards.com${img}`) : [],
+                images: mergedImages,
                 description: found.description || initialProductData.description,
                 inclusions: found.inclusions || '[]',
                 variants: found.variants || { items: [] }
@@ -544,6 +554,29 @@ export function ProductDetailPage() {
     navigate('/cart');
   };
 
+  let displayDescription = productData.description || '';
+  let loopedImages: { alt: string, url: string }[] = [];
+  if (productData.markdown_loop_length || productData.loop_length || productData.image_loop_count) {
+    const loopLenStr = productData.image_loop_count || productData.markdown_loop_length || productData.loop_length;
+    const loopLen = parseInt(loopLenStr || '0', 10);
+    const varName = productData.image_loop_var || productData.markdown_loop_variable || productData.loop_variable || '$i';
+    if (loopLen > 0) {
+      // Find the markdown image pattern that contains the varName
+      const escapedVarName = varName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const imgRegex = new RegExp(`!\\[([\\s\\S]*?)\\]\\s*\\(([\\s\\S]*?` + escapedVarName + `[\\s\\S]*?)\\)`, 'g');
+      
+      displayDescription = displayDescription.replace(imgRegex, (match, alt, url) => {
+        for(let i = 1; i <= loopLen; i++) {
+            let indexStr = String(i).padStart(varName === '$i' ? 2 : String(loopLen).length, '0');
+            let newUrl = url.replaceAll(varName, indexStr);
+            let newAlt = alt.replaceAll(varName, indexStr);
+            loopedImages.push({ alt: newAlt.trim(), url: newUrl.trim() });
+        }
+        return '';
+      });
+    }
+  }
+
   const productJsonLd = {
     "@context": "https://schema.org/",
     "@type": "Product",
@@ -597,15 +630,16 @@ export function ProductDetailPage() {
         <span className="text-gray-900 line-clamp-1">{productData.title}</span>
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-10 xl:gap-16 relative">
+      <div className={`flex flex-col gap-10 xl:gap-16 relative ${productData.category_id !== 5 ? 'lg:flex-row' : ''}`}>
          
-         {/* Main Content (Left) */}
-         <div className="w-full lg:w-[65%] xl:w-[70%]">
+         {/* Main Content (Left or Top) */}
+         <div className={`w-full ${productData.category_id !== 5 ? 'lg:w-[65%] xl:w-[70%]' : ''}`}>
             
             {/* Top Section: Images & Intro */}
-            <div className="flex flex-col lg:flex-row gap-8 xl:gap-12 mb-16">
-               {/* Gallery */}
-               <div className="w-full lg:w-[60%] flex flex-col-reverse sm:flex-row gap-3 xl:gap-4">
+            {productData.category_id !== 5 ? (
+               <div className="flex flex-col lg:flex-row gap-8 xl:gap-12 mb-16">
+                  {/* Gallery */}
+                  <div className="w-full lg:w-[60%] flex flex-col-reverse sm:flex-row gap-3 xl:gap-4">
                   <div className="flex sm:flex-col gap-2 sm:gap-3 shrink-0 overflow-x-auto sm:w-16 xl:w-20 pb-2 sm:pb-0 hide-scrollbar">
                      {productData.images && productData.images.length > 0 ? productData.images.map((img: string, idx: number) => (
                         <img loading="lazy" 
@@ -650,7 +684,7 @@ export function ProductDetailPage() {
                   </div>
                   
                   <div className="text-[14px] text-gray-600 leading-relaxed mb-8 tracking-wide markdown-body prose prose-sm prose-gray max-w-none">
-                     <Markdown rehypePlugins={[rehypeRaw]}>{productData.description}</Markdown>
+                     <Markdown rehypePlugins={[rehypeRaw]}>{displayDescription}</Markdown>
                   </div>
 
                   {appliedRule && appliedRule.notes && (
@@ -690,7 +724,41 @@ export function ProductDetailPage() {
                   )}
                </div>
             </div>
+            ) : (
+               <div className="flex flex-col mb-16 max-w-4xl mx-auto">
+                  {/* Category 5 specialized layout */}
+                  <div className="text-center mb-12">
+                     <div className="inline-block border border-[#c98f6a] text-[#c98f6a] text-[11px] px-3 py-1 rounded mb-4 font-medium tracking-widest">{category}</div>
+                     <h1 className="text-4xl lg:text-5xl font-serif text-gray-900 tracking-wide mb-6">{productData.title}</h1>
+                     <div className="flex justify-center items-baseline gap-2 mb-8 text-gray-900">
+                        <span className="text-[14px]">NT$</span>
+                        <span className="text-3xl font-serif">{formatPrice(baseUnitPrice)}</span>
+                        <span className="text-[14px] text-gray-500 font-sans tracking-wide">/ 雙人插畫繪製</span>
+                     </div>
+                     <div className="text-[15px] max-w-2xl mx-auto text-gray-600 leading-loose tracking-wide markdown-body prose prose-stone text-left">
+                        <Markdown rehypePlugins={[rehypeRaw]}>{displayDescription}</Markdown>
+                     </div>
+                  </div>
+                  
+                  {/* Photo wall grid */}
+                  {(productData.images?.length > 0 || loopedImages.length > 0) && (
+                     <div className="columns-2 lg:columns-3 gap-4 mt-12">
+                        {[...new Set([...(productData.images || []), ...loopedImages.map(i => i.url)])].map((img: string, idx: number) => (
+                           <div key={idx} className="break-inside-avoid mb-4 cursor-pointer group" onClick={() => setPreviewImage(img)}>
+                               <img 
+                                  loading="lazy"
+                                  src={img} 
+                                  className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-[1.03] mix-blend-multiply" 
+                                  alt={`Portfolio ${idx + 1}`}
+                               />
+                           </div>
+                        ))}
+                     </div>
+                  )}
+               </div>
+            )}
 
+            <div className={productData.category_id === 5 ? 'max-w-4xl mx-auto' : ''}>
             {/* Step 1: Formats */}
             {(isWeddingInvitation || isMarriageCertificate) && variants && variants.length > 0 && (
                <div className="mb-14">
@@ -922,10 +990,11 @@ export function ProductDetailPage() {
                </div>
             </div>
             )}
+            </div>
          </div>
 
-         {/* Sticky Summary (Right) */}
-         <div className="w-full lg:w-[35%] xl:w-[30%]">
+         {/* Sticky Summary (Right or Bottom) */}
+         <div className={`w-full ${productData.category_id !== 5 ? 'lg:w-[35%] xl:w-[30%]' : 'max-w-2xl mx-auto'}`}>
             <div className="sticky top-24">
                <div className="border border-gray-200/60 rounded-2xl bg-white shadow-sm overflow-hidden">
                   <div className="p-6 xl:p-8 bg-gradient-to-b from-[#faf8f5]/50 to-white">
@@ -1127,6 +1196,26 @@ export function ProductDetailPage() {
 
       </div>
     </div>
+
+    {previewImage && (
+       <div 
+         className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 p-4 sm:p-8 cursor-zoom-out" 
+         onClick={() => setPreviewImage(null)}
+       >
+          <button 
+             className="absolute top-4 right-4 sm:top-8 sm:right-8 text-white/70 hover:text-white transition-colors p-2 bg-black/50 rounded-full" 
+             onClick={(e) => { e.stopPropagation(); setPreviewImage(null); }}
+          >
+             <X size={28} />
+          </button>
+          <img 
+             src={previewImage} 
+             className="max-w-full max-h-full object-contain rounded drop-shadow-2xl" 
+             alt="Preview" 
+             onClick={(e) => e.stopPropagation()}
+          />
+       </div>
+    )}
     </>
   );
 }

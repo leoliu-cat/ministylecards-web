@@ -10,7 +10,8 @@ export function CollectionsPage() {
     fetch(`${API_BASE_URL}/api/collections?limit=1000`)
       .then(res => res.json())
       .then(data => {
-        setCollections(data);
+        const collectionsData = Array.isArray(data) ? data : data?.docs || [];
+        setCollections(collectionsData);
         setLoading(false);
       })
       .catch(err => {
