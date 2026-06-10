@@ -210,26 +210,9 @@ export function CheckoutPage() {
       
       try {
         let token = localStorage.getItem('website_token');
-        // If no token, auto-register
+        // Require the user to be logged in before checking out per user instructions
         if (!token) {
-           const regRes = await fetch(`${API_BASE_URL}/api/auth/register`, {
-               method: 'POST',
-               headers: { 'Content-Type': 'application/json' },
-               body: JSON.stringify({ 
-                   email: formData.email, 
-                   password: 'auto_' + Date.now() + Math.random().toString(36).substring(7), 
-                   name: formData.name 
-               })
-           });
-           const regData = await regRes.json().catch(() => ({}));
-           if (regData.token || regData.access_token) {
-               token = regData.token || regData.access_token;
-               localStorage.setItem('website_token', token);
-           }
-        }
-
-        if (!token) {
-          setPaymentError('無法取得會員授權，請嘗試先登入');
+          setPaymentError('結帳需請您先登入，請點擊右上方圖示登入會員。');
           setIsSubmitting(false);
           return;
         }

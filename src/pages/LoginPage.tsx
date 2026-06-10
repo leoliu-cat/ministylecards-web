@@ -27,7 +27,27 @@ export function LoginPage() {
   const handleGoogleLogin = async () => {
     try {
       setErrorText("");
-      await loginWithGoogle();
+      setIsLoading(true);
+      const firebaseUser = await loginWithGoogle();
+      const idToken = await firebaseUser.getIdToken();
+      
+      const res = await fetch(`${API_BASE_URL}/api/auth/firebase-login`, {
+         method: 'POST',
+         headers: { 'Content-Type': 'application/json' },
+         body: JSON.stringify({ firebase_token: idToken })
+      });
+      
+      const data = await res.json().catch(() => ({}));
+      
+      if (!res.ok) {
+         throw new Error(data.error || data.message || "Google 登入驗證失敗");
+      }
+      
+      const t = data.token || data.access_token || data.data?.token || data.data?.access_token;
+      if (t) {
+          localStorage.setItem('website_token', t);
+      }
+      
       navigate(from, { replace: true });
     } catch (e: any) {
       if (e.message) {
@@ -35,6 +55,8 @@ export function LoginPage() {
       } else {
          setErrorText("登入發生錯誤，請稍後再試。");
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
