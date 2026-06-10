@@ -44,6 +44,7 @@ export function CheckoutPage() {
   
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [paymentError, setPaymentError] = useState('');
+  const [paymentSuccess, setPaymentSuccess] = useState(false);
   const isTapPaySetup = React.useRef(false);
 
   const generatePDF = async (): Promise<string | null> => {
@@ -175,7 +176,7 @@ export function CheckoutPage() {
      return <Navigate to="/login" replace state={{ from: '/checkout' }} />;
   }
 
-  if (cartItems.length === 0) {
+  if (cartItems.length === 0 && !paymentSuccess) {
      return <Navigate to="/cart" replace />;
   }
 
@@ -337,6 +338,7 @@ export function CheckoutPage() {
             return;
         }
 
+        setPaymentSuccess(true);
         clearCart();
         navigate('/order/success');
 
