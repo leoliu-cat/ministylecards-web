@@ -197,7 +197,11 @@ export function CheckoutPage() {
 
     TPDirect.card.getPrime(async (result: any) => {
       if (result.status !== 0) {
-        setPaymentError('取得交易授權碼失敗: ' + result.msg);
+        if (result.msg?.includes('App name mismatch')) {
+            setPaymentError(`TapPay 授權失敗：App name mismatch。\n\n原因：TapPay 系統限制只能從註冊之網域發起交易請求。\n\n解法：請前往 TapPay 管理後台 (Portal)，將目前的測試網域（例如：${window.location.hostname}）加入應用程式的「網站網址 (Website URLs)」白名單中。`);
+        } else {
+            setPaymentError('取得交易授權碼失敗: ' + result.msg);
+        }
         setIsSubmitting(false);
         return;
       }
@@ -273,7 +277,12 @@ export function CheckoutPage() {
         const orderData = await orderRes.json();
         
         if (!orderRes.ok || !orderData.orderId) {
-           setPaymentError('建立訂單失敗：' + (orderData.error || orderData.message || '未知錯誤'));
+           if (orderRes.status === 401 || orderData.error === 'Invalid token' || orderData.error === 'Missing token') {
+              localStorage.removeItem('website_token');
+              setPaymentError('登入狀態失效，請重新登入以繼續結帳。');
+           } else {
+              setPaymentError('建立訂單失敗：' + (orderData.error || orderData.message || '未知錯誤'));
+           }
            setIsSubmitting(false);
            return;
         }
@@ -403,7 +412,7 @@ export function CheckoutPage() {
                               <span className="text-red-500 font-bold text-xl">!</span>
                            </div>
                            <h3 className="text-xl font-medium text-center mb-2">付款失敗</h3>
-                           <p className="text-gray-600 text-center mb-6">{paymentError}</p>
+                           <p className="text-gray-600 text-center mb-6 whitespace-pre-wrap">{paymentError}</p>
                            <button 
                               type="button"
                               onClick={() => setPaymentError('')} 
