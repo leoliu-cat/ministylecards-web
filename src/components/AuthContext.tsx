@@ -29,7 +29,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setFirebaseUser(user);
+      // Only consider Firebase user logged in if they also have a website token
+      if (user && localStorage.getItem('website_token')) {
+        setFirebaseUser(user);
+      } else {
+        setFirebaseUser(null);
+      }
       setLoading(false);
     });
     return () => unsubscribe();
@@ -42,13 +47,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = async () => {
     localStorage.removeItem('custom_auth_email');
+    localStorage.removeItem('website_token');
     setCustomUser(null);
-    if (firebaseUser) {
-      await signOut(auth);
+    setFirebaseUser(null);
+    if (firebaseUser || auth.currentUser) {
+      try {
+        await signOut(auth);
+      } catch (e) {
+        console.error(e);
+      }
     }
   };
 
-  const activeUser = customUser || firebaseUser; // Priority to custom if both exist (though unlikely)
+  // Only consider active if they have the token
+  const hasWebsiteToken = !!localStorage.getItem('website_token');
+  const activeUser = hasWebsiteToken ? (customUser || firebaseUser) : null;
+
 
   return (
     <AuthContext.Provider value={{ user: activeUser, loading, loginWithEmailOtp, logout }}>

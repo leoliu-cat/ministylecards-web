@@ -34,12 +34,13 @@ export function LoginPage() {
       const res = await fetch(`${API_BASE_URL}/api/auth/firebase-login`, {
          method: 'POST',
          headers: { 'Content-Type': 'application/json' },
-         body: JSON.stringify({ firebase_token: idToken })
+         body: JSON.stringify({ token: idToken }) // The backend expects 'token'
       });
       
       const data = await res.json().catch(() => null);
       
       if (!res.ok) {
+         try { await auth.signOut(); } catch (err) {}
          throw new Error(data?.error || data?.message || `Google 登入驗證失敗 (後端 API 回傳 ${res.status} ${res.statusText})`);
       }
       

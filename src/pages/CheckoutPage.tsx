@@ -193,6 +193,13 @@ export function CheckoutPage() {
       return;
     }
 
+    let token = localStorage.getItem('website_token');
+    // Require the user to be logged in before checking out per user instructions
+    if (!token) {
+      setPaymentError('結帳需請您先登入，請點擊右上方圖示登入會員。');
+      return;
+    }
+
     setIsSubmitting(true);
 
     TPDirect.card.getPrime(async (result: any) => {
@@ -209,14 +216,6 @@ export function CheckoutPage() {
       const prime = result.card.prime;
       
       try {
-        let token = localStorage.getItem('website_token');
-        // Require the user to be logged in before checking out per user instructions
-        if (!token) {
-          setPaymentError('結帳需請您先登入，請點擊右上方圖示登入會員。');
-          setIsSubmitting(false);
-          return;
-        }
-
         // 1. Create order on backend directly (Server handles items calculation)
         const orderRes = await fetch(`${API_BASE_URL}/api/orders`, {
             method: 'POST',
