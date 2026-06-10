@@ -37,13 +37,13 @@ export function LoginPage() {
          body: JSON.stringify({ firebase_token: idToken })
       });
       
-      const data = await res.json().catch(() => ({}));
+      const data = await res.json().catch(() => null);
       
       if (!res.ok) {
-         throw new Error(data.error || data.message || "Google 登入驗證失敗");
+         throw new Error(data?.error || data?.message || `Google 登入驗證失敗 (後端 API 回傳 ${res.status} ${res.statusText})`);
       }
       
-      const t = data.token || data.access_token || data.website_token || data.data?.token || data.data?.access_token || data.data?.website_token;
+      const t = data?.token || data?.access_token || data?.website_token || data?.data?.token || data?.data?.access_token || data?.data?.website_token;
       if (t) {
           localStorage.setItem('website_token', t);
       }
