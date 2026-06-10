@@ -279,7 +279,7 @@ export function CheckoutPage() {
 
         // 2. 呼叫 Node.js 後端 API 處理 TapPay 金流與 Resend 發信
         // 注意：/api/pay 是在我們的 server.ts 中實作的，不是在 Laravel 後端。
-        const payRes = await fetch(`/api/pay`, {
+        const payRes = await fetch(`${API_BASE_URL}/api/pay`, {
             method: 'POST',
             headers: { 
                'Content-Type': 'application/json',

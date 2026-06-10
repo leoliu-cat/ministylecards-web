@@ -20,7 +20,7 @@ export function ContactPage() {
     const message = (form.elements[4] as HTMLTextAreaElement).value;
 
     try {
-      const response = await fetch(`/api/send-email`, {
+      const response = await fetch(`${API_BASE_URL}/api/send-email`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
