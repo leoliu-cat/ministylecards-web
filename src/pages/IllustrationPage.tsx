@@ -5,61 +5,64 @@ import { Link } from 'react-router-dom';
 import { SEO } from '../components/SEO';
 
 export function IllustrationPage() {
-  const [illustrators, setIllustrators] = useState<any[]>([]);
+  const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    Promise.all([
-      fetch(`${API_BASE_URL}/api/collections?limit=1000`).then(r => r.json()),
-      fetch(`${API_BASE_URL}/api/products?limit=1000`).then(r => r.json())
-    ]).then(([collectionsResponse, productsResponse]) => {
-      const productsData = Array.isArray(productsResponse) ? productsResponse : productsResponse?.docs || [];
+    fetch(`${API_BASE_URL}/api/products?limit=1000`)
+      .then(r => r.json())
+      .then(productsResponse => {
+        const productsData = Array.isArray(productsResponse) ? productsResponse : productsResponse?.docs || [];
 
-      // Find illustrator products (category_id 5) and group by illustrator name
-      const illustrationProducts = productsData.filter((p: any) => p.category_id === 5);
-      
-      const illustratorMap = new Map();
+        // Find illustrator products (category_id 5)
+        const illustrationProducts = productsData.filter((p: any) => p.category_id === 5);
+        
+        const illustratorMap = new Map();
 
-      illustrationProducts.forEach((p: any) => {
-         let authorName = p.title;
-         
-         // Extract the part containing "老師" if available, else first part
-         if (p.title && p.title.includes("｜")) {
-            const parts = p.title.split("｜");
-            const teacherPart = parts.find((part: string) => part.includes("老師"));
-            if (teacherPart) {
-               authorName = teacherPart.trim();
-            } else {
-               authorName = parts[0].trim();
-            }
-         }
+        illustrationProducts.forEach((p: any) => {
+           let authorName = p.title;
+           
+           // Extract the part containing "老師" if available, else first part
+           if (p.title && p.title.includes("｜")) {
+              const parts = p.title.split("｜");
+              const teacherPart = parts.find((part: string) => part.includes("老師"));
+              if (teacherPart) {
+                 authorName = teacherPart.trim();
+              } else {
+                 authorName = parts[0].trim();
+              }
+           }
+           
+           let productWorks = p.images ? p.images.length : 0;
+           const loopLenStr = p.image_loop_count || p.markdown_loop_length || p.loop_length;
+           const loopLen = parseInt(loopLenStr || '0', 10);
+           if (loopLen > 0) productWorks += loopLen;
+           if (productWorks === 0) productWorks = 1;
 
-         if (!illustratorMap.has(authorName)) {
-            illustratorMap.set(authorName, {
-               id: p.id, // Using product ID as unique key for the artist
-               name: authorName,
-               slug: p.slug,
-               works: 1,
-               firstProductId: p.slug || p.id,
-               image: p.images && p.images.length > 0 
-                  ? `https://admin.ministylecards.com${p.images[0]}` 
-                  : 'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=300&q=80'
-            });
-         } else {
-            const current = illustratorMap.get(authorName);
-            current.works += 1;
-            // Optionally, we could collect all product IDs for this author if we want to build a faux collection
-         }
+           if (!illustratorMap.has(authorName)) {
+              illustratorMap.set(authorName, {
+                 id: p.id,
+                 name: authorName,
+                 slug: p.slug,
+                 works: productWorks,
+                 firstProductId: p.slug || p.id,
+                 image: p.images && p.images.length > 0 
+                    ? `https://admin.ministylecards.com${p.images[0]}` 
+                    : 'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=300&q=80'
+              });
+           } else {
+              illustratorMap.get(authorName).works += productWorks;
+           }
+        });
+
+        const formatted = Array.from(illustratorMap.values());
+
+        setProducts(formatted);
+        setLoading(false);
+      }).catch(err => {
+        console.warn('Could not fetch illustrators:', err.message || err);
+        setLoading(false);
       });
-
-      const mappedIllustrators = Array.from(illustratorMap.values());
-
-      setIllustrators(mappedIllustrators);
-      setLoading(false);
-    }).catch(err => {
-      console.warn('Could not fetch illustrators::', err.message || err);
-      setLoading(false);
-    });
   }, []);
 
   return (
@@ -70,56 +73,42 @@ export function IllustrationPage() {
         url="https://ministylecards.com/illustration"
       />
       <div className="pt-28 pb-20 px-4 md:px-12 max-w-7xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-3xl md:text-4xl font-normal tracking-tight mb-3 flex items-baseline gap-3">
+        <div className="mb-12 text-center md:text-left">
+          <h1 className="text-3xl md:text-4xl font-normal tracking-tight mb-3 flex flex-col md:flex-row items-center md:items-baseline gap-3">
             插畫繪製 <span className="text-sm md:text-base text-gray-400 font-serif italic">Illustration</span>
           </h1>
-          <div className="text-xs text-gray-500 flex items-center gap-2">
+          <div className="text-xs text-gray-500 flex justify-center md:justify-start items-center gap-2">
             <Link to="/" className="hover:text-gray-800">首頁</Link>
             <span>/</span>
             <span className="text-gray-800">插畫繪製</span>
           </div>
         </div>
 
-        <div className="flex justify-between items-center mb-8 border-b border-gray-200 pb-4">
-          <div className="text-sm text-gray-600">
-            全部插畫師 | <span className="font-medium text-gray-900">{loading ? '...' : illustrators.length} 位插畫師</span>
-          </div>
-          
-          {/* Desktop Sort */}
-          <div className="flex items-center gap-2 text-sm">
-            <span className="hidden md:inline text-gray-500">排序方式：</span>
-            <select className="border-none bg-transparent font-medium focus:ring-0 cursor-pointer">
-              <option>最新加入</option>
-              <option>作品數最多</option>
-            </select>
-          </div>
-        </div>
-
         {/* Grid of Illustrators */}
         {loading ? (
           <div className="py-20 text-center text-gray-500">載入中...</div>
-        ) : illustrators.length > 0 ? (
+        ) : products.length > 0 ? (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
-            {illustrators.map((artist) => (
-              <Link to={artist.firstProductId ? `/product/${artist.firstProductId}` : `/collections/${artist.slug || artist.id}`} key={artist.id} className="group border border-gray-100 rounded-xl p-6 flex flex-col items-center hover:shadow-[0_10px_40px_rgba(0,0,0,0.04)] hover:-translate-y-1 transition-all block">
-                <div className="w-24 h-24 mb-4 rounded-full overflow-hidden bg-gray-50 flex-shrink-0 border-2 border-transparent group-hover:border-[#EAD9CA] transition-colors">
+            {products.map((artist) => (
+              <Link to={artist.firstProductId ? `/product/${artist.firstProductId}` : `/collections/${artist.slug || artist.id}`} key={artist.id} className="group border border-gray-100 bg-white rounded-xl p-6 flex flex-col items-center hover:shadow-[0_10px_40px_rgba(0,0,0,0.04)] hover:-translate-y-1 transition-all block">
+                <div className="w-28 h-28 mb-5 rounded-full overflow-hidden bg-gray-50 flex-shrink-0 border-2 border-transparent group-hover:border-[#EAD9CA] transition-colors shadow-sm">
                   <img loading="lazy" 
                     src={artist.image} 
                     alt={artist.name}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />
                 </div>
-                <h3 className="text-sm font-medium mb-1 text-center">{artist.name}</h3>
-                <p className="text-[11px] text-gray-400 tracking-wider">作品數 {artist.works}</p>
+                <h3 className="text-[17px] font-serif mb-2 text-center text-gray-800">{artist.name}</h3>
+                <p className="text-[14px] text-gray-400 tracking-wider">作品數 {artist.works}</p>
               </Link>
             ))}
           </div>
         ) : (
-          <div className="py-20 text-center text-gray-500">目前還沒有插畫師資料。</div>
+          <div className="py-20 text-center text-gray-500">目前還沒有插畫商品。</div>
         )}
 
       </div>
     </>
   );
 }
+

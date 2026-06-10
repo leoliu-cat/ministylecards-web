@@ -40,7 +40,7 @@ export function CartPage() {
       {cartItems.length === 0 ? (
         <div className="text-center py-20 bg-white rounded-xl shadow-sm border border-gray-100">
           <p className="text-gray-500 mb-6">您的購物車是空的</p>
-          <Link to="/" className="inline-block bg-[#3d342e] hover:bg-[#2b2520] text-white px-8 py-3 rounded text-[14px] tracking-widest transition-colors shadow-sm">
+          <Link to="/" className="inline-block border border-[#d2c5b8] bg-[#faf8f5] text-gray-700 hover:bg-white hover:border-[#c98f6a] hover:text-[#c98f6a] px-10 py-3.5 rounded-full text-[13px] tracking-widest transition-all shadow-sm">
             去逛逛商品
           </Link>
         </div>
@@ -100,9 +100,9 @@ export function CartPage() {
                   </div>
                   
                   <div className="flex items-center border border-gray-200 rounded">
-                    <button onClick={() => updateQuantity(item.id, -1)} className="px-3 py-1.5 text-gray-500 hover:bg-gray-50 transition-colors"><Minus size={14} /></button>
+                    <button onClick={() => updateQuantity(item.id, item.tags && item.tags.includes('喜帖') ? -10 : -1)} className="px-3 py-1.5 text-gray-500 hover:bg-gray-50 transition-colors"><Minus size={14} /></button>
                     <div className="w-10 text-center text-[13px] font-medium border-x border-gray-200 py-1.5">{item.quantity}</div>
-                    <button onClick={() => updateQuantity(item.id, 1)} className="px-3 py-1.5 text-gray-500 hover:bg-gray-50 transition-colors"><Plus size={14} /></button>
+                    <button onClick={() => updateQuantity(item.id, item.tags && item.tags.includes('喜帖') ? 10 : 1)} className="px-3 py-1.5 text-gray-500 hover:bg-gray-50 transition-colors"><Plus size={14} /></button>
                   </div>
                   
                   <div className="md:w-24 text-right text-[15px] font-serif font-medium text-gray-900">

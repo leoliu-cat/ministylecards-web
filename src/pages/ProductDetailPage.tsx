@@ -127,7 +127,7 @@ export function ProductDetailPage() {
                 setSelectedFormatName(defaultVariant.name);
             }
             if (!editItem) {
-               setQuantity(found.category_id === 1 ? 100 : 1);
+               setQuantity(Math.max(found.min_qty || 1, found.category_id === 1 ? 100 : 1));
             }
             setEventDate('');
         }
@@ -304,7 +304,7 @@ export function ProductDetailPage() {
     if (incrementAmount && !isWeddingInvitation) {
        targetQty = quantity + incrementAmount; // step by 1 instead of 10 for products
     }
-    const minQty = isWeddingInvitation ? 30 : 1;
+    const minQty = productData.min_qty !== undefined && productData.min_qty !== null ? productData.min_qty : (isWeddingInvitation ? 30 : 1);
     const qty = Math.max(minQty, targetQty);
     setQuantity(qty);
   };
@@ -542,6 +542,7 @@ export function ProductDetailPage() {
       tags: [category],
       price: discountedFormatTotal / quantity, // Store single item base price conceptually (or total format price per qty) taking discount into account
       quantity: editItem ? editItem.quantity : quantity, // keep quantity the same if we're just editing customizations, but actually we let them edit quantity too.
+      minQty: productData.min_qty !== undefined && productData.min_qty !== null ? productData.min_qty : (isWeddingInvitation ? 30 : 1),
       image: selectedImage || (productData.images && productData.images.length > 0 ? productData.images[0] : ''),
       customizations
     };

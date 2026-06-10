@@ -11,6 +11,7 @@ export interface CartItem {
   tags: string[];
   price: number;
   quantity: number;
+  minQty?: number;
   image: string;
   customizations: {
     id: string;
@@ -88,7 +89,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const updateQuantity = (id: string, delta: number) => {
     setCartItems(prev => prev.map(item => {
       if (item.id === id) {
-        return { ...item, quantity: Math.max(1, item.quantity + delta) };
+        const isWeddingInvitation = item.tags && item.tags.includes('喜帖');
+        const minQty = item.minQty !== undefined ? item.minQty : (isWeddingInvitation ? 30 : 1);
+        return { ...item, quantity: Math.max(minQty, item.quantity + delta) };
       }
       return item;
     }));
