@@ -87,8 +87,9 @@ export function LoginPage() {
              throw new Error(data.error || "驗證碼錯誤");
          }
 
-         if (data.token) {
-             localStorage.setItem('website_token', data.token);
+         const t = data.token || data.access_token || data.data?.token || data.data?.access_token;
+         if (t) {
+             localStorage.setItem('website_token', t);
          }
 
          loginWithEmailOtp(inputValue);

@@ -88,7 +88,7 @@ export function CheckoutPage() {
       const appIdStr = import.meta.env.VITE_TAPPAY_APP_ID;
       const appKeyStr = import.meta.env.VITE_TAPPAY_APP_KEY;
       
-      const appId = parseInt(appIdStr as string) || 12345;
+      const appId = parseInt(appIdStr as string) || 168436;
       const appKey = appKeyStr || 'app_TLACx7X82OheYUFEndKqV6bzQZjUQep1BVfQdX4JGYY8Gs37pfQnO5sMtPOR';
       
       if (!appIdStr || !appKeyStr) {
@@ -222,8 +222,8 @@ export function CheckoutPage() {
                })
            });
            const regData = await regRes.json().catch(() => ({}));
-           if (regData.token) {
-               token = regData.token;
+           if (regData.token || regData.access_token) {
+               token = regData.token || regData.access_token;
                localStorage.setItem('website_token', token);
            }
         }
@@ -277,7 +277,7 @@ export function CheckoutPage() {
         const orderData = await orderRes.json();
         
         if (!orderRes.ok || !orderData.orderId) {
-           if (orderRes.status === 401 || orderData.error === 'Invalid token' || orderData.error === 'Missing token') {
+           if (orderRes.status === 401 || orderRes.status === 403 || orderData.error === 'Invalid token' || orderData.error === 'Missing token') {
               localStorage.removeItem('website_token');
               setPaymentError('登入狀態失效，請重新登入以繼續結帳。');
            } else {
