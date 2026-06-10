@@ -19,7 +19,7 @@ export function LoginPage() {
   const from = location.state?.from || '/';
 
   useEffect(() => {
-     if (user) {
+     if (user && localStorage.getItem('website_token')) {
         navigate(from, { replace: true });
      }
   }, [user, navigate, from]);
@@ -43,7 +43,7 @@ export function LoginPage() {
          throw new Error(data.error || data.message || "Google 登入驗證失敗");
       }
       
-      const t = data.token || data.access_token || data.data?.token || data.data?.access_token;
+      const t = data.token || data.access_token || data.website_token || data.data?.token || data.data?.access_token || data.data?.website_token;
       if (t) {
           localStorage.setItem('website_token', t);
       }
