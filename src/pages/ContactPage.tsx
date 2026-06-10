@@ -20,13 +20,19 @@ export function ContactPage() {
     const message = (form.elements[4] as HTMLTextAreaElement).value;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/send-email`, {
+      const response = await fetch(`/api/send-email`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ name, email, phone, subject, message }),
       });
+
+      if (response.status === 403) {
+         alert('由於瀏覽器安全性限制（阻擋第三方 Cookie），表單無法在預覽視窗送出。請點擊右上角「在新分頁開啟 (View app in new tab)」進行測試。');
+         setIsSubmitting(false);
+         return;
+      }
 
       if (response.ok) {
         setIsSuccess(true);

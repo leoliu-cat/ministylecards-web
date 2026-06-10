@@ -95,7 +95,8 @@ export function CheckoutPage() {
          console.warn('TapPay 測試參數缺失，將使用預設佔位符，可能會導致 App name mismatch 錯誤。請在環境變數設定 VITE_TAPPAY_APP_ID 與 VITE_TAPPAY_APP_KEY。');
       }
 
-      TPDirect.setupSDK(appId, appKey, 'sandbox');
+      const tappayEnv = import.meta.env.VITE_TAPPAY_ENV || 'sandbox';
+      TPDirect.setupSDK(appId, appKey, tappayEnv);
       
       TPDirect.card.setup({
         fields: {
@@ -277,41 +278,50 @@ export function CheckoutPage() {
            return;
         }
 
-        // 2. 呼叫後端 API 處理 TapPay 金流 (使用 API_BASE_URL)
-        const payRes = await fetch(`${API_BASE_URL}/api/pay`, {
+        // 確保先生成 PDF
+        let receiptPdfBase64 = null;
+        try {
+            receiptPdfBase64 = await generatePDF();
+        } catch (pdfErr) {
+            console.error("Failed to generate PDF", pdfErr);
+        }
+
+        // 2. 呼叫 Node.js 後端 API 處理 TapPay 金流與 Resend 發信
+        // 注意：/api/pay 是在我們的 server.ts 中實作的，不是在 Laravel 後端。
+        const payRes = await fetch(`/api/pay`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+               'Content-Type': 'application/json',
+               'Authorization': `Bearer ${token}`
+            },
             body: JSON.stringify({
                 prime: prime,
+                orderId: orderData.orderId,
                 amount: totalPrice,
                 cardholder: {
                    phone_number: formData.phone,
                    name: formData.name,
                    email: formData.email
+                },
+                receiptPdf: receiptPdfBase64,
+                orderDetails: {
+                   items: cartItems
                 }
             })
         });
 
-        const payData = await payRes.json();
+        if (payRes.status === 403) {
+            setPaymentError('瀏覽器安全性限制（預設阻擋第三方 Cookie）導致結帳金流無法在預覽視窗內完成。請點擊右上角「在新分頁開啟 (View app in new tab)」按鈕，在獨立視窗中進行測試。');
+            setIsSubmitting(false);
+            return;
+        }
+
+        const payData = await payRes.json().catch(() => ({ error: '無效的伺服器回應' }));
 
         if (!payRes.ok || (payData.error && payData.error !== '')) {
             setPaymentError('付款失敗: ' + (payData.error || payData.message || '無法完成付款'));
             setIsSubmitting(false);
             return;
-        }
-
-        // 3. 通知遠端後端更新狀態為 paid
-        try {
-           await fetch(`${API_BASE_URL}/api/orders/${orderData.orderId}`, {
-               method: 'PUT',
-               headers: {
-                   'Content-Type': 'application/json',
-                   'Authorization': `Bearer ${token}`
-               },
-               body: JSON.stringify({ status: 'paid' })
-           });
-        } catch (e) {
-           console.error('Failed to mark order as paid on backend', e);
         }
 
         clearCart();

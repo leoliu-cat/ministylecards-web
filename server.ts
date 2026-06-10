@@ -131,12 +131,18 @@ async function startServer() {
          console.warn('TapPay 測試參數缺失，將使用預設佔位符，可能導致 API 認證失敗。請在環境變數設定 TAPPAY_PARTNER_KEY 與 TAPPAY_MERCHANT_ID。');
       }
 
+      const tapPayEnv = process.env.TAPPAY_ENV || 'sandbox';
+      const tapPayUrl = tapPayEnv === 'production' 
+        ? 'https://prod.tappaysdk.com/tpc/payment/pay-by-prime'
+        : 'https://sandbox.tappaysdk.com/tpc/payment/pay-by-prime';
+
       console.log('TapPay API Request Debug:');
+      console.log('- Environment:', tapPayEnv);
       console.log('- Merchant ID used:', merchantId);
       console.log('- Partner Key prefix:', partnerKey.substring(0, 15) + '...');
-      console.log('- TapPay URL:', 'https://sandbox.tappaysdk.com/tpc/payment/pay-by-prime');
+      console.log('- TapPay URL:', tapPayUrl);
 
-      const response = await fetch("https://sandbox.tappaysdk.com/tpc/payment/pay-by-prime", {
+      const response = await fetch(tapPayUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

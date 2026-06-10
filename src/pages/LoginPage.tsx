@@ -48,7 +48,7 @@ export function LoginPage() {
      setErrorText("");
 
      try {
-         const res = await fetch(`\${API_BASE_URL}/api/auth/send-verification-code`, {
+         const res = await fetch(`${API_BASE_URL}/api/auth/send-verification-code`, {
              method: 'POST',
              headers: { 'Content-Type': 'application/json' },
              body: JSON.stringify({ email: inputValue })
@@ -75,7 +75,7 @@ export function LoginPage() {
       setErrorText("");
       
       try {
-         const res = await fetch(`\${API_BASE_URL}/api/auth/verify-code`, {
+         const res = await fetch(`${API_BASE_URL}/api/auth/verify-code`, {
              method: 'POST',
              headers: { 'Content-Type': 'application/json' },
              body: JSON.stringify({ email: inputValue, code: otpCode })
