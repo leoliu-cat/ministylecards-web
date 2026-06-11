@@ -62,7 +62,7 @@ async function startServer() {
     }
 
     if (req.path.startsWith('/api/') || req.path === '/api') {
-      if (req.path === '/api/send-email' || req.path === '/api/pay' || req.path === '/api/tappay/notify') {
+      if (req.path === '/api/send-email') {
         return next();
       }
       return apiProxy(req, res, next);
@@ -72,13 +72,6 @@ async function startServer() {
 
   // Middleware to parse JSON bodies for our own custom routes
   app.use(express.json({ limit: '10mb' }));
-
-  // TapPay Notify Webhook
-  app.post("/api/tappay/notify", (req, res) => {
-    console.log("TapPay Notify Webhook Received:", req.body);
-    // 收到 webhook 後務必回覆 200 OK 告知 TapPay 已收到
-    res.status(200).send("OK");
-  });
 
   // API Route for sending email
   app.post("/api/send-email", async (req, res) => {
@@ -126,140 +119,7 @@ async function startServer() {
     }
   });
 
-  // TapPay Pay By Prime API
-  app.post("/api/pay", async (req, res) => {
-    try {
-      const { prime, amount, cardholder } = req.body;
-      
-      const partnerKey = (process.env.TAPPAY_PARTNER_KEY || "partner_ZaOrjOXKW8tatPaQsx2LDH3HOEF1FKgWp1jLVBFBYElX6vbyz0EHOorY").trim();
-      const merchantId = (process.env.TAPPAY_MERCHANT_ID || "ministyle_CTBC").trim();
-      const tapPayEnv = process.env.TAPPAY_ENV || 'sandbox';
 
-      if (tapPayEnv === 'production' && partnerKey.includes('ZaOrjOXK')) {
-         console.warn('【錯誤】後端宣告了正式環境 (production)，但 TAPPAY_PARTNER_KEY 使用的是測試環境金鑰！這會導致 TapPay 回傳 Invalid arguments : prime');
-      }
-      
-      if (!process.env.TAPPAY_PARTNER_KEY || !process.env.TAPPAY_MERCHANT_ID) {
-         console.warn('TapPay 測試參數缺失，將使用預設佔位符，可能導致 API 認證失敗。請在環境變數設定 TAPPAY_PARTNER_KEY 與 TAPPAY_MERCHANT_ID。');
-      }
-
-      const tapPayUrl = tapPayEnv === 'production' 
-        ? 'https://prod.tappaysdk.com/tpc/payment/pay-by-prime'
-        : 'https://sandbox.tappaysdk.com/tpc/payment/pay-by-prime';
-
-      console.log('TapPay API Request Debug:');
-      console.log('- Environment:', tapPayEnv);
-      console.log('- Merchant ID used:', merchantId);
-      console.log('- Partner Key prefix:', partnerKey.substring(0, 15) + '...');
-      console.log('- TapPay URL:', tapPayUrl);
-
-      const frontendRedirectUrl = `${req.protocol}://${req.get('host')}/order/success`;
-      const backendNotifyUrl = `${req.protocol}://${req.get('host')}/api/tappay/notify`;
-
-      const response = await fetch(tapPayUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-api-key": partnerKey,
-        },
-        body: JSON.stringify({
-          prime: prime,
-          partner_key: partnerKey,
-          merchant_id: merchantId,
-          details: "Mini Style Cards Order",
-          amount: amount,
-          cardholder: cardholder,
-          remember: false,
-          result_url: {
-            frontend_redirect_url: frontendRedirectUrl,
-            backend_notify_url: backendNotifyUrl
-          }
-        }),
-      });
-
-      const data = await response.json();
-      if (data.status !== 0) {
-        console.error("TapPay Error:", data);
-        return res.status(400).json({ 
-          error: data.msg || "Payment failed", 
-          details: data,
-          debug: { merchantId, partnerKeyLength: partnerKey.length } 
-        });
-      }
-
-      // If 3D Secure is triggered, TapPay returns a payment_url
-      if (data.payment_url) {
-         console.log("3D Secure required. Returning payment_url:", data.payment_url);
-         // We cannot easily send the email here because we are not sure if 3D auth will succeed.
-         // In a real app, we would store order data in a DB and send email via the backend_notify_url.
-         return res.status(200).json({ success: true, payment_url: data.payment_url });
-      }
-
-      // Send email with Receipt via Resend (Only happens if 3D Secure is bypassed or not strictly required)
-      const { receiptPdf, orderDetails } = req.body;
-      console.log("receiptPdf length:", receiptPdf ? receiptPdf.length : 0);
-      if (receiptPdf) {
-         console.log("receiptPdf start:", receiptPdf.substring(0, 50));
-      }
-      const resendKey = process.env.RESEND_API_KEY;
-      if (resendKey) {
-        try {
-          const resend = new Resend(resendKey);
-          const emailHtml = `
-            <h2>感謝您的訂購！這是您的 Mini Style Cards 訂單明細</h2>
-            <p>親愛的 ${cardholder.name} 您好：</p>
-            <p>我們已收到您的付款（訂單處理中）。</p>
-            <br/>
-            <h3>訂單摘要：</h3>
-            <ul>
-              ${orderDetails?.items?.map((item: any) => `
-                <li>${item.name} x ${item.quantity} - $${item.price * item.quantity}
-                  ${item.eventDate ? `<br/><span style="color: #c98f6a">宴客 / 活動日期: ${item.eventDate}</span>` : ''}
-                  ${item.customizations?.length > 0 ? `<ul>${item.customizations.map((c: any) => `<li>+ ${c.name}${c.desc && c.desc !== c.name && c.desc !== '數量未滿 100 份酌收基本上機費' ? ` - ${c.desc}` : ''} ${c.price > 0 ? '(+NT$ ' + c.price.toLocaleString('zh-TW') + ')' : ''}</li>`).join('')}</ul>` : ''}
-                </li>
-              `).join('')}
-            </ul>
-            <p>總金額：NT$ ${Number(amount).toLocaleString('zh-TW')}</p>
-            <p>這封郵件包含了您的訂單詳細內容與製作條款的 PDF 附檔，請查收。</p>
-            <br/>
-            <p style="color: #666; font-size: 0.9em; margin-bottom: 20px;">這封郵件是系統自動發出，請不要直接回覆。如有任何問題請隨時與我們聯繫：<br/>
-            info@ministylecards.com / 03-4687530</p>
-            <p>Mini Style Cards 團隊敬上</p>
-          `;
-
-          const attachments = receiptPdf ? [
-            {
-              filename: 'receipt.pdf',
-              content: receiptPdf, // base64 string
-              contentType: 'application/pdf',
-            }
-          ] : [];
-
-          const emailRes = await resend.emails.send({
-            from: "Mini Style Cards <info@ministylecards.com>",
-            to: [cardholder.email, "info@ministylecards.com"],
-            subject: "Mini Style Cards - 訂單成功通知與明細",
-            html: emailHtml,
-            attachments
-          });
-          
-          if (emailRes.error) {
-             console.error("Resend API returned error:", emailRes.error);
-          } else {
-             console.log("Email sent successfully to", cardholder.email);
-          }
-        } catch (emailErr) {
-          console.error("Failed to send order email:", emailErr);
-          // Don't fail the payment if email fails
-        }
-      }
-
-      res.status(200).json({ success: true, data });
-    } catch (error) {
-      console.error("Payment Error:", error);
-      res.status(500).json({ error: "Server payment error." });
-    }
-  });
 
 
   // Vite middleware for development

@@ -305,8 +305,7 @@ export function CheckoutPage() {
             console.error("Failed to generate PDF", pdfErr);
         }
 
-        // 2. 呼叫 Node.js 後端 API 處理 TapPay 金流與 Resend 發信
-        // 注意：/api/pay 是在我們的 server.ts 中實作的，不是在 Laravel 後端。
+        // 2. 呼叫後端 API 處理 TapPay 金流與訂單
         const payRes = await fetch(`${API_BASE_URL}/api/pay`, {
             method: 'POST',
             headers: { 
