@@ -34,6 +34,14 @@ export function CollectionDetailPage() {
                 fauxTitle = p.title.split("｜")[1].split(" ")[0];
             } else if (p.category_id === 5) {
                 fauxTitle = "特約插畫師";
+            } else if (p.title.includes("禮金簿")) {
+                fauxTitle = "禮金簿系列";
+            } else if (p.title.includes("簽名")) {
+                fauxTitle = "簽名軸系列";
+            } else if (p.title.includes("封蠟")) {
+                fauxTitle = "封蠟系列";
+            } else if (p.title.includes("特調水彩")) {
+                fauxTitle = "特調水彩系列";
             }
             col = {
                id: p.collection_id,
@@ -116,11 +124,11 @@ export function CollectionDetailPage() {
         image={collection.cover_image ? `https://admin.ministylecards.com${collection.cover_image}` : undefined}
       />
       <CategoryLayout 
-        title="精選系列" 
+        title={macroCategory.name} 
         subtitle={collection.title}
         breadcrumbs={[
           { label: '首頁', to: '/' }, 
-          { label: '精選系列', to: '/collections' },
+          { label: macroCategory.name, to: macroCategory.to },
           { label: collection.title }
         ]}
         products={products}
