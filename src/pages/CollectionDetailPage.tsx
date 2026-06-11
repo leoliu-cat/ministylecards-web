@@ -116,11 +116,11 @@ export function CollectionDetailPage() {
         image={collection.cover_image ? `https://admin.ministylecards.com${collection.cover_image}` : undefined}
       />
       <CategoryLayout 
-        title={collection.title} 
-        subtitle={collection.slug}
+        title="精選系列" 
+        subtitle={collection.title}
         breadcrumbs={[
           { label: '首頁', to: '/' }, 
-          { label: macroCategory.name, to: macroCategory.to },
+          { label: '精選系列', to: '/collections' },
           { label: collection.title }
         ]}
         products={products}

@@ -142,11 +142,15 @@ export function HomePage() {
         <div className="collectionGrid">
           {displayCollections.map((item) => (
             <Link to={item.href} className={`collectionCard ${item.className || ''}`} key={item.title}>
-              <img loading="lazy" src={item.image} alt={item.alt} />
+              <div style={{ position: 'relative', overflow: 'hidden', flex: 1, borderRadius: '10px' }}>
+                <img loading="lazy" src={item.image} alt={item.alt} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              </div>
               <div className="collectionInfo">
-                <h3>{item.title}</h3>
-                <p>{item.subtitle}</p>
-                <small>探索系列 →</small>
+                <h3 className="font-serif italic text-gray-900 text-[22px] mb-1">{item.title}</h3>
+                <p className="text-[13px] text-gray-500 mb-2 truncate">{item.subtitle}</p>
+                <div className="text-[12px] text-[#8b4e36] font-medium tracking-widest flex items-center gap-1 group-hover:gap-2 transition-all">
+                  探索系列 <span>→</span>
+                </div>
               </div>
             </Link>
           ))}

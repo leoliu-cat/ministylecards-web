@@ -195,7 +195,10 @@ export function CategoryLayout({ title, subtitle, breadcrumbs, products, hideCol
           <div className="mt-16 flex justify-center items-center gap-2 font-serif text-sm">
             <button 
               className={`w-8 h-8 flex items-center justify-center rounded ${currentPage === 1 ? 'text-gray-300 cursor-not-allowed' : 'text-gray-400 hover:text-gray-900'}`}
-              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+              onClick={() => {
+                setCurrentPage(p => Math.max(1, p - 1));
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
               disabled={currentPage === 1}
             >
               <ChevronRight size={16} className="rotate-180" />
@@ -211,7 +214,10 @@ export function CategoryLayout({ title, subtitle, breadcrumbs, products, hideCol
                       ? 'border border-[#d5a587] text-[#8b4e36]' 
                       : 'hover:bg-gray-50 text-gray-600 hover:text-gray-900'
                   }`}
-                  onClick={() => setCurrentPage(page as number)}
+                  onClick={() => {
+                    setCurrentPage(page as number);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
                 >
                   {page}
                 </button>
@@ -219,7 +225,10 @@ export function CategoryLayout({ title, subtitle, breadcrumbs, products, hideCol
             ))}
             <button 
               className={`w-8 h-8 flex items-center justify-center rounded ${currentPage === totalPages ? 'text-gray-300 cursor-not-allowed' : 'text-gray-400 hover:text-gray-900'}`}
-              onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+              onClick={() => {
+                setCurrentPage(p => Math.min(totalPages, p + 1));
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
               disabled={currentPage === totalPages}
             >
               <ChevronRight size={16} />
