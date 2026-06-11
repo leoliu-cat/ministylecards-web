@@ -62,7 +62,7 @@ async function startServer() {
     }
 
     if (req.path.startsWith('/api/') || req.path === '/api') {
-      if (req.path === '/api/send-email' || req.path === '/api/pay') {
+      if (req.path === '/api/send-email' || req.path === '/api/pay' || req.path === '/api/tappay/notify') {
         return next();
       }
       return apiProxy(req, res, next);
@@ -72,6 +72,13 @@ async function startServer() {
 
   // Middleware to parse JSON bodies for our own custom routes
   app.use(express.json({ limit: '10mb' }));
+
+  // TapPay Notify Webhook
+  app.post("/api/tappay/notify", (req, res) => {
+    console.log("TapPay Notify Webhook Received:", req.body);
+    // 收到 webhook 後務必回覆 200 OK 告知 TapPay 已收到
+    res.status(200).send("OK");
+  });
 
   // API Route for sending email
   app.post("/api/send-email", async (req, res) => {
@@ -146,6 +153,9 @@ async function startServer() {
       console.log('- Partner Key prefix:', partnerKey.substring(0, 15) + '...');
       console.log('- TapPay URL:', tapPayUrl);
 
+      const frontendRedirectUrl = `${req.protocol}://${req.get('host')}/order/success`;
+      const backendNotifyUrl = `${req.protocol}://${req.get('host')}/api/tappay/notify`;
+
       const response = await fetch(tapPayUrl, {
         method: "POST",
         headers: {
@@ -160,6 +170,10 @@ async function startServer() {
           amount: amount,
           cardholder: cardholder,
           remember: false,
+          result_url: {
+            frontend_redirect_url: frontendRedirectUrl,
+            backend_notify_url: backendNotifyUrl
+          }
         }),
       });
 
@@ -173,7 +187,15 @@ async function startServer() {
         });
       }
 
-      // Send email with Receipt via Resend
+      // If 3D Secure is triggered, TapPay returns a payment_url
+      if (data.payment_url) {
+         console.log("3D Secure required. Returning payment_url:", data.payment_url);
+         // We cannot easily send the email here because we are not sure if 3D auth will succeed.
+         // In a real app, we would store order data in a DB and send email via the backend_notify_url.
+         return res.status(200).json({ success: true, payment_url: data.payment_url });
+      }
+
+      // Send email with Receipt via Resend (Only happens if 3D Secure is bypassed or not strictly required)
       const { receiptPdf, orderDetails } = req.body;
       console.log("receiptPdf length:", receiptPdf ? receiptPdf.length : 0);
       if (receiptPdf) {

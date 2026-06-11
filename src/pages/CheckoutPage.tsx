@@ -343,6 +343,12 @@ export function CheckoutPage() {
             return;
         }
 
+        if (payData.payment_url) {
+            // 需要 3D 驗證
+            window.location.href = payData.payment_url;
+            return;
+        }
+
         setPaymentSuccess(true);
         clearCart();
         navigate('/order/success');
