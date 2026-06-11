@@ -126,12 +126,16 @@ async function startServer() {
       
       const partnerKey = (process.env.TAPPAY_PARTNER_KEY || "partner_ZaOrjOXKW8tatPaQsx2LDH3HOEF1FKgWp1jLVBFBYElX6vbyz0EHOorY").trim();
       const merchantId = (process.env.TAPPAY_MERCHANT_ID || "ministyle_CTBC").trim();
+      const tapPayEnv = process.env.TAPPAY_ENV || 'sandbox';
+
+      if (tapPayEnv === 'production' && partnerKey.includes('ZaOrjOXK')) {
+         console.warn('【錯誤】後端宣告了正式環境 (production)，但 TAPPAY_PARTNER_KEY 使用的是測試環境金鑰！這會導致 TapPay 回傳 Invalid arguments : prime');
+      }
       
       if (!process.env.TAPPAY_PARTNER_KEY || !process.env.TAPPAY_MERCHANT_ID) {
          console.warn('TapPay 測試參數缺失，將使用預設佔位符，可能導致 API 認證失敗。請在環境變數設定 TAPPAY_PARTNER_KEY 與 TAPPAY_MERCHANT_ID。');
       }
 
-      const tapPayEnv = process.env.TAPPAY_ENV || 'sandbox';
       const tapPayUrl = tapPayEnv === 'production' 
         ? 'https://prod.tappaysdk.com/tpc/payment/pay-by-prime'
         : 'https://sandbox.tappaysdk.com/tpc/payment/pay-by-prime';

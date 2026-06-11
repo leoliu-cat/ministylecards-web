@@ -114,11 +114,16 @@ export function CheckoutPage() {
       const appId = parseInt(appIdStr as string) || 168436;
       const appKey = appKeyStr || 'app_TLACx7X82OheYUFEndKqV6bzQZjUQep1BVfQdX4JGYY8Gs37pfQnO5sMtPOR';
       
+      const tappayEnv = import.meta.env.VITE_TAPPAY_ENV || 'sandbox';
+
+      if (tappayEnv === 'production' && appKey.includes('TLACx7X82Ohe')) {
+         console.error('【錯誤】你宣告了正式環境 (production)，但使用的是測試環境的 APP_KEY。請更新你的 VITE_TAPPAY_APP_ID 與 VITE_TAPPAY_APP_KEY 為正式環境金鑰。');
+      }
+
       if (!appIdStr || !appKeyStr) {
          console.warn('TapPay 測試參數缺失，將使用預設佔位符，可能會導致 App name mismatch 錯誤。請在環境變數設定 VITE_TAPPAY_APP_ID 與 VITE_TAPPAY_APP_KEY。');
       }
 
-      const tappayEnv = import.meta.env.VITE_TAPPAY_ENV || 'sandbox';
       TPDirect.setupSDK(appId, appKey, tappayEnv);
       
       TPDirect.card.setup({
