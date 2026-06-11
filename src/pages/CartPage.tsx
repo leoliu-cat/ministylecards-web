@@ -81,7 +81,7 @@ export function CartPage() {
                   <p className="text-[13px] text-gray-500 mb-2">{item.baseQuantity}</p>
                   
                   <div className="text-[13px] text-gray-500 space-y-1 mb-3">
-                    {item.eventDate && <p>宴客 / 活動日期：{item.eventDate}</p>}
+                    {item.eventDate && <p className="text-[#c98f6a] font-medium text-[14px]">宴客 / 活動日期：{item.eventDate}</p>}
                     {item.paper && <p>紙材：{item.paper}</p>}
                     {item.size && <p>尺寸：{item.size}</p>}
                   </div>

@@ -431,6 +431,7 @@ export function CheckoutPage() {
                         <div className="flex-1 text-sm">
                            <p className="font-medium text-gray-900 mb-1">{item.name}</p>
                            <p className="text-gray-500 mb-1">{item.baseQuantity} × {item.quantity}</p>
+                           {item.eventDate && <p className="text-[#c98f6a] font-medium text-[13px] mb-1">宴客 / 活動日期：{item.eventDate}</p>}
                            {item.customizations && item.customizations.map((custom: any, customIdx: number) => (
                              <p key={`${custom.id || custom.name}-${customIdx}`} className="text-gray-500 text-xs">
                                + {custom.name}{custom.desc && custom.desc !== custom.name && custom.desc !== '數量未滿 100 份酌收基本上機費' ? ` - ${custom.desc}` : ''} {custom.price > 0 ? `(+${formatPrice(custom.price)})` : ''}
@@ -513,6 +514,7 @@ export function CheckoutPage() {
                            <span>{formatPrice(item.price * item.quantity)}</span>
                         </div>
                         <div className="text-sm mb-2" style={{ color: "#6b7280" }}>數量: {item.baseQuantity} × {item.quantity}</div>
+                        {item.eventDate && <div className="text-sm mb-2" style={{ color: "#c98f6a" }}>宴客 / 活動日期: {item.eventDate}</div>}
                         {item.customizations && item.customizations.length > 0 && (
                            <div className="pl-4 border-l-2" style={{ borderColor: 'rgba(201, 143, 106, 0.3)' }}>
                               {item.customizations.map((custom: any, customIdx: number) => (

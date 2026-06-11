@@ -4,8 +4,18 @@
  */
 
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { Layout } from './components/Layout';
+
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+}
 import { HomePage } from './pages/HomePage';
 import { CategoryPage } from './pages/CategoryPage';
 import { ProcessPage } from './pages/ProcessPage';
@@ -30,6 +40,7 @@ import { CollectionDetailPage } from './pages/CollectionDetailPage';
 import { ProductDetailPage } from './pages/ProductDetailPage';
 import { CheckoutPage } from './pages/CheckoutPage';
 import { OrderSuccessPage } from './pages/OrderSuccessPage';
+import { NotFoundPage } from './pages/NotFoundPage';
 
 import { CartProvider } from './components/CartContext';
 import { AuthProvider } from './components/AuthContext';
@@ -49,6 +60,7 @@ export default function App() {
       <FavoritesProvider>
         <CartProvider>
           <BrowserRouter>
+            <ScrollToTop />
             <Routes>
             <Route path="/" element={<Layout />}>
               <Route index element={<HomePage />} />
@@ -75,7 +87,7 @@ export default function App() {
               <Route path="product/:productId" element={<ProductDetailRoute />} />
               <Route path="collections/new-arrival" element={<NewArrivalPage />} />
               <Route path="new-arrival" element={<NewArrivalPage />} />
-              <Route path="*" element={<div className="p-20 text-center"><h1 className="text-2xl mb-4">Under Construction</h1><p>We are building this page...</p></div>} />
+              <Route path="*" element={<NotFoundPage />} />
             </Route>
             <Route path="/login" element={<LoginPage />} />
           </Routes>

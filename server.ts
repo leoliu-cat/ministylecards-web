@@ -188,6 +188,7 @@ async function startServer() {
             <ul>
               ${orderDetails?.items?.map((item: any) => `
                 <li>${item.name} x ${item.quantity} - $${item.price * item.quantity}
+                  ${item.eventDate ? `<br/><span style="color: #c98f6a">宴客 / 活動日期: ${item.eventDate}</span>` : ''}
                   ${item.customizations?.length > 0 ? `<ul>${item.customizations.map((c: any) => `<li>+ ${c.name}${c.desc && c.desc !== c.name && c.desc !== '數量未滿 100 份酌收基本上機費' ? ` - ${c.desc}` : ''} ${c.price > 0 ? '(+NT$ ' + c.price.toLocaleString('zh-TW') + ')' : ''}</li>`).join('')}</ul>` : ''}
                 </li>
               `).join('')}
@@ -232,6 +233,71 @@ async function startServer() {
       console.error("Payment Error:", error);
       res.status(500).json({ error: "Server payment error." });
     }
+  });
+
+  // Sitemap
+  app.get("/sitemap.xml", async (req, res) => {
+    try {
+      const BASE_URL = "https://www.ministylecards.com";
+      const [productsRes, collectionsRes, journalsRes] = await Promise.all([
+        fetch('https://admin.ministylecards.com/api/products?limit=1000').then(r => r.json()),
+        fetch('https://admin.ministylecards.com/api/collections?limit=1000').then(r => r.json()),
+        fetch('https://admin.ministylecards.com/api/journals?limit=1000').then(r => r.json()).catch(() => []) 
+      ]).catch(() => [[], [], []]); // fallback
+
+      const urls = [
+        `${BASE_URL}/`,
+        `${BASE_URL}/wedding-invitations`,
+        `${BASE_URL}/marriage-certificate`,
+        `${BASE_URL}/wedding-favors`,
+        `${BASE_URL}/essential-design`,
+        `${BASE_URL}/illustration`,
+        `${BASE_URL}/wedding-website`,
+        `${BASE_URL}/process`,
+        `${BASE_URL}/about`,
+        `${BASE_URL}/contact`,
+        `${BASE_URL}/collections/new-arrival`,
+        `${BASE_URL}/collections`,
+        `${BASE_URL}/journal`,
+      ];
+
+      if (Array.isArray(productsRes)) {
+        productsRes.forEach((p: any) => {
+           if (p.slug) urls.push(`${BASE_URL}/product/${p.slug}`);
+        });
+      }
+      if (Array.isArray(collectionsRes)) {
+        collectionsRes.forEach((c: any) => {
+           if (c.slug) urls.push(`${BASE_URL}/collections/${c.slug}`);
+        });
+      }
+      if (Array.isArray(journalsRes)) {
+        journalsRes.forEach((j: any) => {
+           if (j.id) urls.push(`${BASE_URL}/journal/${j.id}`);
+        });
+      }
+
+      const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${Array.from(new Set(urls)).map(url => `  <url>\n    <loc>${url}</loc>\n  </url>`).join('\n')}
+</urlset>`;
+
+      res.header('Content-Type', 'application/xml');
+      res.send(sitemap);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Error generating sitemap');
+    }
+  });
+
+  // Robots.txt
+  app.get("/robots.txt", (req, res) => {
+    const host = req.hostname || req.get('host') || '';
+    if (host.includes('beta.ministylecards.com') || host.includes('run.app') || host.includes('localhost')) {
+      return res.type('text/plain').send("User-agent: *\nDisallow: /\n");
+    }
+    const robots = "User-agent: *\nDisallow:\nSitemap: https://www.ministylecards.com/sitemap.xml\n";
+    res.type('text/plain').send(robots);
   });
 
   // Vite middleware for development

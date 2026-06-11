@@ -257,6 +257,7 @@ export function ProductDetailPage() {
 
   const [quantity, setQuantity] = useState(isWeddingInvitation ? 100 : 1);
   const [eventDate, setEventDate] = useState('');
+  const [showEventDateError, setShowEventDateError] = useState(false);
   const [selectedEnvelopes, setSelectedEnvelopes] = useState<string[]>([]);
   
   React.useEffect(() => {
@@ -466,6 +467,20 @@ export function ProductDetailPage() {
   };
 
   const handleAddToCart = () => {
+    if (!eventDate) {
+      setShowEventDateError(true);
+      const el = document.getElementById('event-date-section');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        el.classList.add('animate-pulse');
+        setTimeout(() => el.classList.remove('animate-pulse'), 1000);
+        setTimeout(() => {
+          document.getElementById('event-date-input')?.focus();
+        }, 500);
+      }
+      return;
+    }
+
     const customizations = [];
     if (Object.keys(selectedAddons).length > 0) {
       Object.entries(selectedAddons).forEach(([groupId, value]) => {
@@ -834,19 +849,24 @@ export function ProductDetailPage() {
                   </div>
 
                   {/* Step 5: Event Date */}
-                  <div>
+                  <div id="event-date-section">
                      <h3 className="text-xl font-medium mb-6 font-serif">宴客 / 活動日期</h3>
-                     <div className="border border-gray-200 rounded-xl p-5 bg-white flex flex-col justify-center min-h-[98px] shadow-sm">
-                        <div className="flex items-center gap-3 border border-gray-300 rounded px-4 py-2.5 w-full focus-within:border-[#c98f6a] transition-colors relative">
-                           <Calendar size={18} className="text-gray-400 absolute left-4" />
+                     <div className={`border rounded-xl p-5 bg-white flex flex-col justify-center min-h-[98px] shadow-sm transition-colors ${showEventDateError ? 'border-red-400 bg-red-50/30' : (!eventDate ? 'border-[#c98f6a]/40 bg-[#c98f6a]/5' : 'border-gray-200')}`}>
+                        <div className={`flex items-center gap-3 border rounded px-4 py-2.5 w-full focus-within:border-[#c98f6a] transition-colors relative ${showEventDateError ? 'border-red-300' : 'border-gray-300'}`}>
+                           <Calendar size={18} className={`${showEventDateError ? 'text-red-400' : 'text-gray-400'} absolute left-4`} />
                            <input 
+                              id="event-date-input"
                               type="date" 
                               className="w-full text-[15px] outline-none text-gray-700 bg-transparent pl-8"
                               value={eventDate}
-                              onChange={e => setEventDate(e.target.value)}
+                              onChange={e => {
+                                 setEventDate(e.target.value);
+                                 if (e.target.value) setShowEventDateError(false);
+                              }}
                               required
                            />
                         </div>
+                        {showEventDateError && <p className="text-red-500 text-sm mt-3 flex items-center justify-center font-medium">※ 加入購物車前，請務必填寫宴客 / 活動日期</p>}
                      </div>
                   </div>
                </div>
