@@ -173,6 +173,16 @@ export function CheckoutPage() {
     }
   }, [loading, user, cartItems.length]);
 
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('payment_error') === 'true') {
+      setPaymentError('信用卡 3D 安全驗證失敗，或者付款作業遭到取消，請確認並重新嘗試。');
+      // Clean up URL without triggering navigation
+      const newUrl = window.location.pathname;
+      window.history.replaceState({}, document.title, newUrl);
+    }
+  }, []);
+
   if (loading) {
      return <div className="min-h-screen pt-32 pb-20 text-center">Loading...</div>;
   }

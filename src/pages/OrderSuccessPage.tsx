@@ -1,8 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { CheckCircle } from 'lucide-react';
+import { useCart } from '../components/CartContext';
 
 export function OrderSuccessPage() {
+  const { clearCart } = useCart();
+
+  useEffect(() => {
+    clearCart();
+  }, [clearCart]);
+
   return (
     <div className="pt-32 pb-24 px-4 md:px-12 max-w-4xl mx-auto text-center min-h-[60vh] flex flex-col items-center justify-center">
       <CheckCircle className="w-16 h-16 text-green-500 mb-6 mx-auto" />

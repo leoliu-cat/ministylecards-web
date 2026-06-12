@@ -62,7 +62,7 @@ async function startServer() {
     }
 
     if (req.path.startsWith('/api/') || req.path === '/api') {
-      if (req.path === '/api/send-email') {
+      if (req.path === '/api/send-email' || req.path === '/api/tappay/notify' || req.path === '/api/pay' || req.path === '/api/tappay/result') {
         return next();
       }
       return apiProxy(req, res, next);
@@ -127,6 +127,27 @@ async function startServer() {
     console.log("TapPay Notify Webhook Received:", req.body);
     // 收到 webhook 後務必回覆 200 OK 告知 TapPay 已收到
     res.status(200).send("OK");
+  });
+
+  // TapPay Result Webhook (Frontend Redirect Override)
+  app.get("/api/tappay/result", (req, res) => {
+    console.log("TapPay Result Webhook (GET) Received:", req.query);
+    const statusStr = req.query.status as string;
+    if (statusStr === '0') {
+      res.redirect("/order/success");
+    } else {
+      res.redirect("/checkout?payment_error=true");
+    }
+  });
+
+  app.post("/api/tappay/result", (req, res) => {
+    console.log("TapPay Result Webhook (POST) Received:", req.body);
+    const statusStr = req.body.status !== undefined ? String(req.body.status) : undefined;
+    if (statusStr === '0') {
+      res.redirect("/order/success");
+    } else {
+      res.redirect("/checkout?payment_error=true");
+    }
   });
 
   // TapPay Pay By Prime API
