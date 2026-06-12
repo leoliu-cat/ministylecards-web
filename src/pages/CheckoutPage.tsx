@@ -190,7 +190,7 @@ export function CheckoutPage() {
     const itemCustomTotal = item.customizations.reduce((cSum, c) => cSum + c.price, 0);
     return sum + itemCustomTotal;
   }, 0);
-  const shippingFee = 120;
+  const shippingFee = cartItems.reduce((sum, item) => sum + (item.shippingFee || 0), 0);
   const totalPrice = productsSubtotal + customizationsSubtotal + shippingFee;
 
   const formatPrice = (price: number) => {
@@ -323,7 +323,8 @@ export function CheckoutPage() {
                 },
                 receiptPdf: receiptPdfBase64,
                 orderDetails: {
-                   items: cartItems
+                   items: cartItems,
+                   shippingFee: shippingFee
                 }
             })
         });

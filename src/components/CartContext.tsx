@@ -13,6 +13,7 @@ export interface CartItem {
   quantity: number;
   minQty?: number;
   image: string;
+  shippingFee: number;
   customizations: {
     id: string;
     name: string;

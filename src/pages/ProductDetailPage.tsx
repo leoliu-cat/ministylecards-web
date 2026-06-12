@@ -559,6 +559,7 @@ export function ProductDetailPage() {
       quantity: editItem ? editItem.quantity : quantity, // keep quantity the same if we're just editing customizations, but actually we let them edit quantity too.
       minQty: productData.min_qty !== undefined && productData.min_qty !== null ? productData.min_qty : (isWeddingInvitation ? 30 : 1),
       image: selectedImage || (productData.images && productData.images.length > 0 ? productData.images[0] : ''),
+      shippingFee: productData.shipping_fee !== undefined && productData.shipping_fee !== null ? Number(productData.shipping_fee) : 0,
       customizations
     };
 

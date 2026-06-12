@@ -21,7 +21,8 @@ export function CartPage() {
     const itemCustomTotal = item.customizations.reduce((cSum, c) => cSum + c.price, 0);
     return sum + itemCustomTotal; // assuming customizations added once for the whole configuration
   }, 0);
-  const totalPrice = productsSubtotal + customizationsSubtotal;
+  const shippingFee = cartItems.reduce((sum, item) => sum + (item.shippingFee || 0), 0);
+  const totalPrice = productsSubtotal + customizationsSubtotal + shippingFee;
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('zh-TW', { style: 'currency', currency: 'TWD', minimumFractionDigits: 0 }).format(price);
@@ -198,6 +199,10 @@ export function CartPage() {
                 <div className="flex justify-between items-center w-full">
                   <span>加購內容小計</span>
                   <span className="font-serif text-[15px]">{formatPrice(customizationsSubtotal)}</span>
+                </div>
+                <div className="flex justify-between items-center w-full">
+                  <span>運費</span>
+                  <span className="font-serif text-[15px]">{formatPrice(shippingFee)}</span>
                 </div>
               </div>
               
