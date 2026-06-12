@@ -40,6 +40,7 @@ import { CollectionDetailPage } from './pages/CollectionDetailPage';
 import { ProductDetailPage } from './pages/ProductDetailPage';
 import { CheckoutPage } from './pages/CheckoutPage';
 import { OrderSuccessPage } from './pages/OrderSuccessPage';
+import { TappayResultPage } from './pages/TappayResultPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 
 import { CartProvider } from './components/CartContext';
@@ -82,6 +83,7 @@ export default function App() {
               <Route path="cart" element={<CartPage />} />
               <Route path="checkout" element={<CheckoutPage />} />
               <Route path="order/success" element={<OrderSuccessPage />} />
+              <Route path="api/tappay/result" element={<TappayResultPage />} />
               <Route path="collections" element={<CollectionsPage />} />
               <Route path="collections/:collectionId" element={<CollectionDetailPage />} />
               <Route path="product/:productId" element={<ProductDetailRoute />} />
