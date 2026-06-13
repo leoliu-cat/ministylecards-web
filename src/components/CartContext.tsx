@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 
 export interface CartItem {
   id: string; // Use string for unique id generated on add
@@ -50,7 +50,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     localStorage.setItem('minicart', JSON.stringify(cartItems));
   }, [cartItems]);
 
-  const addToCart = (item: Omit<CartItem, 'id'>) => {
+  const addToCart = useCallback((item: Omit<CartItem, 'id'>) => {
     setCartItems(prev => {
       // Find existing item with exact same configuration
       const existingItemIndex = prev.findIndex(prevItem => {
@@ -85,9 +85,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
       return [...prev, { ...item, id: Math.random().toString(36).substring(2, 9) }];
     });
-  };
+  }, []);
 
-  const updateQuantity = (id: string, delta: number) => {
+  const updateQuantity = useCallback((id: string, delta: number) => {
     setCartItems(prev => prev.map(item => {
       if (item.id === id) {
         const isWeddingInvitation = item.tags && item.tags.includes('喜帖');
@@ -96,13 +96,13 @@ export function CartProvider({ children }: { children: ReactNode }) {
       }
       return item;
     }));
-  };
+  }, []);
 
-  const removeItem = (id: string) => {
+  const removeItem = useCallback((id: string) => {
     setCartItems(prev => prev.filter(item => item.id !== id));
-  };
+  }, []);
 
-  const removeCustomization = (itemId: string, customId: string) => {
+  const removeCustomization = useCallback((itemId: string, customId: string) => {
     setCartItems(prev => prev.map(item => {
       if (item.id === itemId) {
         return {
@@ -112,11 +112,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
       }
       return item;
     }));
-  };
+  }, []);
 
-  const clearCart = () => {
+  const clearCart = useCallback(() => {
     setCartItems([]);
-  };
+  }, []);
 
   return (
     <CartContext.Provider value={{ cartItems, addToCart, updateQuantity, removeItem, removeCustomization, clearCart }}>
