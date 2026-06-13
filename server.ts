@@ -153,7 +153,7 @@ async function startServer() {
   // TapPay Pay By Prime API
   app.post("/api/pay", async (req, res) => {
     try {
-      const { prime, amount, cardholder, orderDetails, receiptPdf } = req.body;
+      const { prime, amount, cardholder, orderId, orderDetails, receiptPdf } = req.body;
       
       const partnerKey = (process.env.TAPPAY_PARTNER_KEY || "partner_ZaOrjOXKW8tatPaQsx2LDH3HOEF1FKgWp1jLVBFBYElX6vbyz0EHOorY").trim();
       const merchantId = (process.env.TAPPAY_MERCHANT_ID || "ministyle_CTBC").trim();
@@ -171,8 +171,8 @@ async function startServer() {
         ? 'https://prod.tappaysdk.com/tpc/payment/pay-by-prime'
         : 'https://sandbox.tappaysdk.com/tpc/payment/pay-by-prime';
 
-      const frontendRedirectUrl = `${req.protocol}://${req.get('host')}/order/success`;
-      const backendNotifyUrl = `${req.protocol}://${req.get('host')}/api/tappay/notify`;
+      const frontendRedirectUrl = `${req.protocol}://${req.get('host')}/api/tappay/result?order_id=${orderId || ''}`;
+      const backendNotifyUrl = `${req.protocol}://${req.get('host')}/api/tappay/notify?order_id=${orderId || ''}`;
 
       const response = await fetch(tapPayUrl, {
         method: "POST",
