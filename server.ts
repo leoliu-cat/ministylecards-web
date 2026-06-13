@@ -172,7 +172,8 @@ async function startServer() {
         : 'https://sandbox.tappaysdk.com/tpc/payment/pay-by-prime';
 
       const frontendRedirectUrl = `${req.protocol}://${req.get('host')}/api/tappay/result?order_id=${orderId || ''}`;
-      const backendNotifyUrl = `${req.protocol}://${req.get('host')}/api/tappay/notify?order_id=${orderId || ''}`;
+      const backendUrl = process.env.WEBSITE_API_URL || "https://admin.ministylecards.com";
+      const backendNotifyUrl = `${backendUrl}/api/tappay/notify?order_id=${orderId || ''}`;
 
       const response = await fetch(tapPayUrl, {
         method: "POST",
