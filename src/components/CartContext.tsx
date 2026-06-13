@@ -26,6 +26,7 @@ interface CartContextType {
   cartItems: CartItem[];
   addToCart: (item: Omit<CartItem, 'id'>) => void;
   updateQuantity: (id: string, delta: number) => void;
+  setItemQuantity: (id: string, quantity: number) => void;
   removeItem: (id: string) => void;
   removeCustomization: (itemId: string, customId: string) => void;
   clearCart: () => void;
@@ -98,6 +99,17 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }));
   }, []);
 
+  const setItemQuantity = useCallback((id: string, quantity: number) => {
+    setCartItems(prev => prev.map(item => {
+      if (item.id === id) {
+        const isWeddingInvitation = item.tags && item.tags.includes('喜帖');
+        const minQty = item.minQty !== undefined ? item.minQty : (isWeddingInvitation ? 30 : 1);
+        return { ...item, quantity: Math.max(minQty, quantity) };
+      }
+      return item;
+    }));
+  }, []);
+
   const removeItem = useCallback((id: string) => {
     setCartItems(prev => prev.filter(item => item.id !== id));
   }, []);
@@ -119,7 +131,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <CartContext.Provider value={{ cartItems, addToCart, updateQuantity, removeItem, removeCustomization, clearCart }}>
+    <CartContext.Provider value={{ cartItems, addToCart, updateQuantity, setItemQuantity, removeItem, removeCustomization, clearCart }}>
       {children}
     </CartContext.Provider>
   );

@@ -1,0 +1,36 @@
+258:  const [quantity, setQuantity] = useState(isWeddingInvitation ? 100 : 1);
+265:      setQuantity(editItem.quantity);
+306:       targetQty = quantity + incrementAmount; // step by 1 instead of 10 for products
+373:  const chargeQty = Math.max(100, quantity); // 燙金都是未滿100份按100份計算
+383:                 addonTotal += option.price * quantity;
+387:                 addonTotal += option.price * quantity;
+396:                 addonTotal += option.price * quantity;
+400:                 addonTotal += option.price * quantity;
+410:  let formatTotal = baseUnitPrice * quantity;
+419:              quantity >= t.min_qty && (t.max_qty === null || quantity <= t.max_qty)
+423:              formatTotal = baseUnitPrice * quantity;
+427:           let tier = appliedRule.tiers.find((t: any) => t.qty === quantity);
+430:              const validTiers = appliedRule.tiers.filter((t: any) => t.qty && t.qty <= quantity).sort((a: any, b: any) => b.qty - a.qty);
+435:              baseUnitPrice = formatTotal / quantity;
+446:          if (quantity < 50) setupFee = 2000;
+450:          if (quantity >= 30 && quantity <= 50) setupFee = 2000;
+451:          else if (quantity >= 51 && quantity <= 79) setupFee = 1500;
+452:          else if (quantity >= 80 && quantity <= 99) setupFee = 1000;
+455:      if (quantity >= 500) invitationDiscountRate = 0.7;
+456:      else if (quantity >= 400) invitationDiscountRate = 0.8;
+457:      else if (quantity >= 300) invitationDiscountRate = 0.85;
+458:      else if (quantity >= 200) invitationDiscountRate = 0.9;
+503:                 price = opt.price * quantity;
+517:                 price = opt.price * quantity;
+553:      baseQuantity: isWeddingInvitation ? `${quantity} 份` : (isMarriageCertificate ? `${quantity} 組` : `${quantity} 個`),
+558:      price: discountedFormatTotal / quantity, // Store single item base price conceptually (or total format price per qty) taking discount into account
+559:      quantity: editItem ? editItem.quantity : quantity, // keep quantity the same if we're just editing customizations, but actually we let them edit quantity too.
+842:                              <button onClick={() => handleQuantityChange(quantity - 10, -1)} className="px-3.5 py-1.5 text-gray-500 hover:bg-gray-50 transition-colors"><Minus size={14}/></button>
+843:                              <div className="w-14 text-center text-[15px] font-medium tracking-wide">{quantity}</div>
+844:                              <button onClick={() => handleQuantityChange(quantity + 10, 1)} className="px-3.5 py-1.5 text-gray-500 hover:bg-gray-50 transition-colors"><Plus size={14}/></button>
+1041:                              <button onClick={() => handleQuantityChange(quantity - 10, -1)} className="px-3 py-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-colors"><Minus size={14}/></button>
+1042:                              <div className="w-12 text-center text-[14px] font-medium">{quantity}</div>
+1043:                              <button onClick={() => handleQuantityChange(quantity + 10, 1)} className="px-3 py-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-colors"><Plus size={14}/></button>
+1089:                                                 p = opt.price * quantity;
+1105:                                                 p = opt.price * quantity;
+1137:                           <span>{isWeddingInvitation ? '喜帖' : (isMarriageCertificate ? '書約' : '商品')}小計 <br/><span className="text-[11px] text-gray-400 block mt-0.5">(NT$ {formatPrice(baseUnitPrice)} x {quantity} {isWeddingInvitation ? '份' : (isMarriageCertificate ? '組' : '個')})</span></span>

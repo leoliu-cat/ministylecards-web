@@ -559,7 +559,7 @@ export function ProductDetailPage() {
       quantity: editItem ? editItem.quantity : quantity, // keep quantity the same if we're just editing customizations, but actually we let them edit quantity too.
       minQty: productData.min_qty !== undefined && productData.min_qty !== null ? productData.min_qty : (isWeddingInvitation ? 30 : 1),
       image: selectedImage || (productData.images && productData.images.length > 0 ? productData.images[0] : ''),
-      shippingFee: productData.shipping_fee !== undefined && productData.shipping_fee !== null ? Number(productData.shipping_fee) : 0,
+      shippingFee: productData.shipping_fee !== undefined && productData.shipping_fee !== null && productData.shipping_fee !== '' ? Number(productData.shipping_fee) : 120,
       customizations
     };
 
@@ -840,7 +840,21 @@ export function ProductDetailPage() {
                         <div className="flex items-center justify-between">
                            <div className="flex items-center border border-gray-300 rounded overflow-hidden">
                               <button onClick={() => handleQuantityChange(quantity - 10, -1)} className="px-3.5 py-1.5 text-gray-500 hover:bg-gray-50 transition-colors"><Minus size={14}/></button>
-                              <div className="w-14 text-center text-[15px] font-medium tracking-wide">{quantity}</div>
+                              <input 
+                                 type="number" 
+                                 className="w-14 text-center text-[15px] font-medium tracking-wide focus:outline-none hide-number-spinners" 
+                                 value={quantity || ''}
+                                 onChange={(e) => {
+                                    const val = parseInt(e.target.value, 10);
+                                    setQuantity(isNaN(val) ? 0 : val);
+                                 }}
+                                 onBlur={(e) => {
+                                    let val = parseInt(e.target.value, 10);
+                                    const minQty = productData.min_qty !== undefined && productData.min_qty !== null ? productData.min_qty : (isWeddingInvitation ? 30 : 1);
+                                    if (isNaN(val) || val < minQty) val = minQty;
+                                    setQuantity(val);
+                                 }}
+                              />
                               <button onClick={() => handleQuantityChange(quantity + 10, 1)} className="px-3.5 py-1.5 text-gray-500 hover:bg-gray-50 transition-colors"><Plus size={14}/></button>
                            </div>
                            {isWeddingInvitation && <p className="text-[13px] text-gray-600 tracking-wide font-medium">滿{setupFeeThreshold}份免基本機費</p>}
@@ -1039,7 +1053,21 @@ export function ProductDetailPage() {
                         <div className="flex items-center justify-between">
                            <div className="flex items-center border border-gray-200 rounded overflow-hidden bg-white">
                               <button onClick={() => handleQuantityChange(quantity - 10, -1)} className="px-3 py-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-colors"><Minus size={14}/></button>
-                              <div className="w-12 text-center text-[14px] font-medium">{quantity}</div>
+                              <input 
+                                 type="number" 
+                                 className="w-12 text-center text-[14px] font-medium focus:outline-none hide-number-spinners" 
+                                 value={quantity || ''}
+                                 onChange={(e) => {
+                                    const val = parseInt(e.target.value, 10);
+                                    setQuantity(isNaN(val) ? 0 : val);
+                                 }}
+                                 onBlur={(e) => {
+                                    let val = parseInt(e.target.value, 10);
+                                    const minQty = productData.min_qty !== undefined && productData.min_qty !== null ? productData.min_qty : (isWeddingInvitation ? 30 : 1);
+                                    if (isNaN(val) || val < minQty) val = minQty;
+                                    setQuantity(val);
+                                 }}
+                              />
                               <button onClick={() => handleQuantityChange(quantity + 10, 1)} className="px-3 py-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-colors"><Plus size={14}/></button>
                            </div>
                            {isWeddingInvitation && <span className="text-[12px] text-[#c98f6a] bg-[#faf8f5] px-2 py-1 rounded tracking-wide">滿{setupFeeThreshold}份免基本機費</span>}

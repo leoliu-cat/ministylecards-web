@@ -5,7 +5,7 @@ import { useCart } from '../components/CartContext';
 import { useAuth } from '../components/AuthContext';
 
 export function CartPage() {
-  const { cartItems, updateQuantity, removeItem, removeCustomization } = useCart();
+  const { cartItems, updateQuantity, setItemQuantity, removeItem, removeCustomization } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -21,7 +21,7 @@ export function CartPage() {
     const itemCustomTotal = item.customizations.reduce((cSum, c) => cSum + c.price, 0);
     return sum + itemCustomTotal; // assuming customizations added once for the whole configuration
   }, 0);
-  const shippingFee = cartItems.reduce((sum, item) => sum + (item.shippingFee || 0), 0);
+  const shippingFee = cartItems.reduce((sum, item) => sum + (item.shippingFee !== undefined && item.shippingFee !== null ? item.shippingFee : 120), 0);
   const totalPrice = productsSubtotal + customizationsSubtotal + shippingFee;
 
   const formatPrice = (price: number) => {
@@ -102,7 +102,22 @@ export function CartPage() {
                   
                   <div className="flex items-center border border-gray-200 rounded">
                     <button onClick={() => updateQuantity(item.id, item.tags && item.tags.includes('喜帖') ? -10 : -1)} className="px-3 py-1.5 text-gray-500 hover:bg-gray-50 transition-colors"><Minus size={14} /></button>
-                    <div className="w-10 text-center text-[13px] font-medium border-x border-gray-200 py-1.5">{item.quantity}</div>
+                    <input 
+                      type="number"
+                      className="w-10 text-center text-[13px] font-medium border-x border-gray-200 py-1.5 focus:outline-none hide-number-spinners"
+                      value={item.quantity || ''}
+                      onChange={(e) => {
+                        const val = parseInt(e.target.value, 10);
+                        setItemQuantity(item.id, isNaN(val) ? 0 : val);
+                      }}
+                      onBlur={(e) => {
+                        let val = parseInt(e.target.value, 10);
+                        const isWeddingInvitation = item.tags && item.tags.includes('喜帖');
+                        const minQty = item.minQty !== undefined ? item.minQty : (isWeddingInvitation ? 30 : 1);
+                        if (isNaN(val) || val < minQty) val = minQty;
+                        setItemQuantity(item.id, val);
+                      }}
+                    />
                     <button onClick={() => updateQuantity(item.id, item.tags && item.tags.includes('喜帖') ? 10 : 1)} className="px-3 py-1.5 text-gray-500 hover:bg-gray-50 transition-colors"><Plus size={14} /></button>
                   </div>
                   
