@@ -11,6 +11,7 @@ import { useFavorites } from '../components/FavoritesContext';
 import { SEO } from '../components/SEO';
 import Markdown from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
+import { ImageMagnifier } from '../components/ImageMagnifier';
 
 export function ProductDetailPage() {
   const { productId } = useParams<{ productId: string }>();
@@ -678,7 +679,11 @@ export function ProductDetailPage() {
                      }
                   </div>
                   <div className="flex-1">
-                     <img loading="lazy" src={selectedImage || productData.image} className="w-full aspect-[500/647] object-cover rounded-lg shadow-sm" alt={productData.title} />
+                     <ImageMagnifier 
+                        src={selectedImage || productData.image} 
+                        className="w-full aspect-[500/647] object-cover rounded-lg shadow-sm" 
+                        alt={productData.title} 
+                     />
                   </div>
                </div>
 
