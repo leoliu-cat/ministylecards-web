@@ -90,8 +90,8 @@ export function IllustrationPage() {
         ) : products.length > 0 ? (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
             {products.map((artist) => (
-              <Link to={artist.firstProductId ? `/product/${artist.firstProductId}` : `/collections/${artist.slug || artist.id}`} key={artist.id} className="group border border-gray-100 bg-white rounded-xl p-6 flex flex-col items-center hover:shadow-[0_10px_40px_rgba(0,0,0,0.04)] hover:-translate-y-1 transition-all block">
-                <div className="w-28 h-28 mb-5 rounded-full overflow-hidden bg-gray-50 flex-shrink-0 border-2 border-transparent group-hover:border-[#EAD9CA] transition-colors shadow-sm">
+              <Link to={artist.firstProductId ? `/product/${artist.firstProductId}` : `/collections/${artist.slug || artist.id}`} key={artist.id} className="group border border-gray-100 bg-white rounded-xl p-4 md:p-6 lg:p-8 flex flex-col items-center hover:shadow-[0_10px_40px_rgba(0,0,0,0.04)] hover:-translate-y-1 transition-all block">
+                <div className="w-32 h-32 md:w-40 md:h-40 xl:w-48 xl:h-48 mb-4 md:mb-5 lg:mb-6 rounded-full overflow-hidden bg-gray-50 flex-shrink-0 border-2 border-transparent group-hover:border-[#EAD9CA] transition-colors shadow-sm">
                   <img loading="lazy" 
                     src={artist.image} 
                     alt={artist.name}

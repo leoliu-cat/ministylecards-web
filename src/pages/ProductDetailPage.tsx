@@ -759,7 +759,7 @@ export function ProductDetailPage() {
                   
                   {/* Photo wall grid */}
                   {(productData.images?.length > 0 || loopedImages.length > 0) && (
-                     <div className="columns-2 lg:columns-3 gap-4 mt-12">
+                     <div className="columns-1 lg:columns-2 gap-4 mt-12">
                         {[...new Set([...(productData.images || []), ...loopedImages.map(i => i.url)])].map((img: string, idx: number) => (
                            <div key={idx} className="break-inside-avoid mb-4 cursor-pointer group" onClick={() => setPreviewImage(img)}>
                                <img 
